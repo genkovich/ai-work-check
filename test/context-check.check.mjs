@@ -129,12 +129,23 @@ test('page has no uploads, contact fields, external assets, network calls or dep
   assert.doesNotMatch(html,/<script[^>]+src=|<link[^>]+href=|<iframe|type="(?:file|email|tel)"|\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket/);
   assert.match(html,/connect-src 'none'/);
   const links=[...html.matchAll(/href="([^"]+)"/g)].map(x=>x[1]);
-  assert.deepEqual(links,['https://github.com/genkovich/agentic-engineering-mini-kit','https://code.claude.com/docs/en/memory']);
+  assert.deepEqual(links,['https://github.com/genkovich/agentic-engineering-mini-kit','https://code.visualstudio.com/download','https://nodejs.org/en/download','https://code.claude.com/docs/en/quickstart','https://code.claude.com/docs/en/troubleshoot-install','https://code.claude.com/docs/en/memory']);
 });
 
 test('all copy controls target an inline block, with handoff before fresh session',()=>{
   for(const [,target]of html.matchAll(/data-copy="([^"]+)"/g))assert.ok(html.includes('<pre id="'+target+'">'));
   assert.ok(html.indexOf('id="prompt-8"')<html.indexOf('id="prompt-9"'));
   for(const command of ['npm ci','npm run verify','npm run demo','git status --short','git diff','git diff --cached'])assert.ok(html.includes(command));
-  assert.match(html,/SDD чи встановлення плагінів[^<]*не обов’язкові/);
+  assert.match(html,/SDD й плагіни зараз не потрібні/);
+});
+
+test('manual review does not mark the fresh-agent step complete',()=>{
+  assert.match(html,/Крок 9 залиш незавершеним/);
+  assert.match(C.markdown(all(false)),/Крок 9 залишається незавершеним/);
+  assert.doesNotMatch(html,/Якщо використано альтернативний спосіб/);
+});
+
+
+test('follow-along has concrete setup, fresh session and ZIP comparison',()=>{
+  for(const text of ['Download ZIP','Open Folder','New Terminal','node --version','claude --version','claude.ai/install.sh','claude.ai/install.ps1','/exit','scripts/compare-kit.mjs','ADDED','CHANGED','REMOVED'])assert.ok(html.includes(text),text);
 });
