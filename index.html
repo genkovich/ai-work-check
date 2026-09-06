@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="10 простих запитань про роботу з AI. Зрозумілі приклади, підказки до відповідей і готова таблиця результатів.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Як я працюю з AI: 10 простих запитань</title>
+<style>
+:root{color-scheme:light;--ink:#202b28;--muted:#50615a;--paper:#f5f4ee;--line:#d4ddd5;--accent:#22533e;--soft:#e7eee5}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 system-ui,-apple-system,sans-serif}main{max-width:920px;margin:auto;padding:38px 24px 72px}h1{font-size:clamp(30px,5vw,48px);line-height:1.15;letter-spacing:-.035em;margin:12px 0 20px;max-width:750px}h2{line-height:1.25;margin-top:0}p{max-width:760px}.eyebrow{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent)}.intro{font-size:20px}.muted{color:var(--muted)}.privacy{padding:14px 18px;border-left:3px solid var(--accent);background:var(--soft);font-size:15px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:24px 0}button,.file-label{display:inline-block;font:inherit;font-weight:600;line-height:1.35;padding:12px 18px;border:1px solid var(--accent);border-radius:10px;color:var(--accent);background:#fff;cursor:pointer;text-align:center}button.primary{background:var(--accent);color:#fff}button:disabled{opacity:.4;cursor:not-allowed}button:hover:not(:disabled),.file-label:hover{box-shadow:0 2px 0 var(--accent)}:focus-visible{outline:3px solid #936024;outline-offset:4px}.file-label:focus-within{outline:3px solid #936024;outline-offset:4px}.file-label input{position:absolute;width:1px;height:1px;opacity:0}.progress{position:sticky;top:0;z-index:2;background:var(--paper);padding:14px 0;border-bottom:1px solid var(--line);font-size:15px}.progress progress{width:100%;height:7px;accent-color:var(--accent);display:block;margin-top:6px}fieldset{min-width:0;border:1px solid var(--line);border-radius:16px;background:#fff;margin:24px 0;padding:22px}legend{padding:0 8px;font-weight:700;font-size:19px;max-width:100%}.group{font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}.hint{margin:0 0 20px;color:var(--muted);font-size:15px}.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:9px;cursor:pointer;font-size:15px}.choice:has(input:checked){background:var(--soft);border-color:var(--accent)}.choice input{accent-color:var(--accent);margin-top:5px;flex-shrink:0}#results{margin-top:38px;border-top:3px solid var(--accent);padding-top:30px}.summary{font-size:25px;font-weight:700;line-height:1.4}.next{background:var(--soft);border-radius:14px;padding:20px;margin:24px 0}.next h3{margin:0 0 8px}.next p{margin:0}.table-wrap{overflow-x:auto;margin:20px 0 30px}table{width:100%;border-collapse:collapse;font-size:15px;text-align:left}th,td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--soft)}caption{text-align:left;font-weight:700;font-size:19px;margin-bottom:12px}td:first-child{min-width:155px}#question-table td:nth-child(2){min-width:230px}#message{color:#83311d;font-weight:600}#baseline-note{padding:12px 16px;background:var(--soft);border-radius:10px}.foot{font-size:14px;margin-top:30px}[hidden]{display:none!important}@media(max-width:560px){main{padding:24px 16px 50px}.options{grid-template-columns:1fr}fieldset{padding:18px 12px}legend{font-size:18px}.toolbar>*{width:100%}}@media print{body{background:#fff}.toolbar,.progress,#questions,.privacy,#message,#baseline-note,.no-print{display:none!important}main{max-width:none;padding:0}#results{border-top:0}.table-wrap{overflow:visible}table{font-size:11px}tr{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">Мінікурс · перший крок</div>
+<h1>Як я працюю з AI: 10 простих запитань</h1>
+<p class="intro">Коли AI допомагає писати код, частина роботи залишається за нами: пояснити задачу, дати потрібну інформацію та перевірити зміни. Ця анкета допоможе придивитися до того, як ти організовуєш цю роботу.</p>
+<p>Можеш закласти 3-5 хвилин; це орієнтир. Згадай свій досвід розробки з AI та обери одну відповідь на кожне запитання. Підказки пояснюють дії на одному прикладі. Якщо лише починаєш і певних ситуацій ще не було, для цього є окрема відповідь.</p>
+<div class="next"><h2>Приклад, щоб запитання були зрозумілішими</h2><p>Уявімо невеликий застосунок зі списком покупок. У ньому вже є поле для назви товару та кнопка додавання. Вводимо «Молоко», натискаємо кнопку, і товар з’являється у списку. Ти просиш AI додати можливість позначати товар як куплений. Натискаєш біля «Молоко» й бачиш «Куплено». При цьому новий «Хліб» досі можна додати. Ось що ми просимо зробити і що потім перевірятимемо.</p><p>На цьому прикладі розберемо дії, про які запитує анкета. Створювати застосунок зараз не потрібно: відповідай про свою роботу з AI, а підказки використовуй, щоб зрозуміти запитання.</p></div>
+<p class="privacy">Усе працює в цьому браузері, без надсилання даних назовні. Відповіді не зберігаються автоматично. Щоб залишити результат, завантаж його перед закриттям сторінки. Контакти й особисті файли не потрібні. На вебсторінці GitHub обробляє звичайні дані відвідування; сама анкета не надсилає твоїх відповідей.</p>
+</header>
+<p class="privacy">Як вибрати відповідь? «Так, зазвичай», якщо це твоя звичка. «Іноді», якщо робиш так час від часу. «Поки не роблю цього», якщо така нагода є, але ти пропускаєш цей крок. «Ще не було такої ситуації», якщо ще не доводилося. Можна обрати останній варіант хоч у всіх запитаннях.</p>
+<details class="no-print"><summary>Уже проходиш анкету вдруге? Тут можна додати попередній результат</summary>
+<div class="toolbar no-print">
+<label class="file-label">Додати попередній результат<input id="import-file" type="file" accept=".json,application/json"></label>
+<button id="remove-baseline" type="button" hidden>Прибрати порівняння</button>
+</div>
+<p class="muted no-print">Вибери файл result.json, який зберігаєш після першого проходження. Попередні відповіді залишаться окремо. Зараз ти відповідатимеш заново.</p>
+</details>
+<p id="baseline-note" hidden></p>
+<p id="message" role="alert"></p>
+<div class="progress"><span id="progress-text" role="status" aria-live="polite">Відповідей: 0 із 10</span><progress id="progress" value="0" max="10" aria-label="Кількість відповідей"></progress></div>
+<div id="questions"></div>
+<noscript><p>Щоб заповнити анкету тут, увімкни JavaScript у браузері. Або скористайся <a href="https://github.com/genkovich/ai-work-check/blob/main/questionnaire.md">текстовою версією</a>.</p></noscript>
+<section id="results" hidden aria-labelledby="result-title">
+<h2 id="result-title">Твій результат</h2>
+<p id="overall" class="summary"></p>
+<p id="experience"></p>
+<p>Бали описують твою оцінку звичок. Вони не показують, наскільки добре AI виконав роботу чи скільки часу вдалося заощадити. Тут немає рівнів чи прохідного бала. Результат допоможе вибрати одну звичку для наступної спроби.</p>
+<p id="comparison" hidden></p>
+<div class="next"><h3>Один наступний крок</h3><p id="next-step"></p></div>
+<div class="table-wrap"><table id="group-table"><caption>П’ять груп</caption><thead><tr><th scope="col">Група</th><th scope="col">Бали</th><th scope="col">Відповідей без досвіду</th></tr></thead><tbody></tbody></table></div>
+<div class="table-wrap"><table id="question-table"><caption>Відповіді на всі запитання</caption><thead></thead><tbody></tbody></table></div>
+<div class="toolbar"><button id="download-md" class="primary" type="button" disabled>Зберегти результат текстом</button><button id="download-json" type="button" disabled>Зберегти для повторного проходження</button></div>
+<p class="foot">Перша кнопка зберігає текст із відповідями й таблицею. Друга зберігає result.json для порівняння: наступного разу додай цей файл у розділі над запитаннями. Перший результат залиш без змін.</p>
+</section>
+</main>
+<script id="audit-engine">
+'use strict';
+globalThis.MiniAudit = (() => {
+  const VERSION = 'mini-audit-v1';
+  const OPTIONS = {A:{label:'Так, зазвичай',points:2}, B:{label:'Іноді',points:1}, C:{label:'Поки не роблю цього',points:0}, D:{label:'Ще не було такої ситуації',points:null}};
+  const GROUPS = ['Зрозуміла задача','Потрібна інформація','Робота по кроках','Перевірка результату','Корисні висновки'];
+  const QUESTIONS = [
+    ['Перш ніж просити AI змінити код, ти описуєш, що має змінитися в застосунку?','Уявімо, що до списку покупок уже можна додавати товари. Тепер потрібно позначати куплене. Так і формулюємо задачу: «Додай можливість позначати товар як куплений». З цього опису AI розуміє, яку зміну ми очікуємо.','Перед наступним запитом напиши одне речення про бажаний результат: що має змінитися для користувача.'],
+    ['Ти додаєш до задачі приклад: що зробить користувач і що має відбутися?','Самого прохання «додай позначку» може бути замало. Уточнюємо: «Натискаю біля “Молоко”, і поруч з’являється “Куплено”». Цей приклад потім допоможе перевірити, чи правильно виконано задачу.','Додай до наступної задачі один приклад: що робить користувач і що має відбутися після цього.'],
+    ['Ти показуєш AI потрібний код або пояснюєш, як ця частина застосунку працює зараз?','Перш ніж змінювати список, AI потрібно побачити, як він побудований. Можна вказати файл зі сторінкою й пояснити: «Тут відображаються товари, а ця частина відповідає за додавання». Не потрібно передавати всі файли проєкту без розбору.','Покажи AI файл, якого стосується задача, і коротко поясни, що в ньому вже працює.'],
+    ['Ти пояснюєш AI, що потрібно залишити без змін або які файли й дані не можна чіпати?','Нова можливість не повинна заважати додаванню товарів. Тому заздалегідь зазначаємо: «Додавання має працювати як раніше». Окремо обмежуємо доступ: для навчальної задачі використовуємо вигадані дані, не особисті файли чи справжні дані користувачів.','Назви поведінку, яку потрібно зберегти, і за потреби вкажи файли чи дані, до яких AI не повинен звертатися.'],
+    ['Якщо задача складається з кількох кроків, ти просиш AI спочатку пояснити, що він робитиме по черзі?','Для нашого списку план може бути коротким: розібратися в поточному коді, додати позначку, перевірити нову дію та додавання товарів. Переглянувши ці кроки до роботи, легше помітити зайву зміну або пропущену перевірку.','Для наступної задачі з кількох кроків спочатку попроси короткий план і переглянь його до змін у коді.'],
+    ['Ти домовляєшся з AI, що перед видаленням файлів або зміною важливих даних він має запитати твого дозволу?','Наприклад, AI пропонує видалити старий файл зі списком. Спочатку потрібно з’ясувати, чи він ще використовується. Домовленість проста: «Перед видаленням або дією, яка може зачепити важливі дані, зупинися й запитай». Якщо AI лише пропонує код у чаті й не має доступу до файлів, обери «Ще не було такої ситуації».','Перед наступною роботою попроси AI запитувати дозволу перед видаленням файлів чи зміною важливих даних.'],
+    ['Після відповіді AI «готово» ти самостійно перевіряєш, чи працює потрібна зміна?','Запускаємо застосунок, натискаємо біля «Молоко» й дивимося, чи з’являється «Куплено». Так ми перевіряємо поведінку, про яку домовилися на початку. Повідомлення AI про завершення роботи саме по собі цього не підтверджує.','Після наступного «готово» перевір один конкретний приклад із початкового опису задачі.'],
+    ['Після змін ти перевіряєш, чи збереглася робота можливостей, які були в застосунку раніше?','Позначка «Куплено» вже працює. Тепер додаємо до списку «Хліб»: ця можливість була раніше й має залишитися. Так перевіряємо, чи новий код не завадив старій поведінці. У розробці це називають регресійною перевіркою.','Після наступної зміни перевір не лише нову можливість, а й одну пов’язану дію, яка працювала раніше.'],
+    ['Після роботи ти залишаєш коротку нотатку про те, що змінилося і що вже перевірено?','Достатньо кількох речень: «Додано позначку “Куплено”. Перевірено позначення “Молоко” та додавання “Хліб”». Такий запис допомагає повернутися до задачі пізніше або передати її колезі без повторного перегляду всього листування.','Залиш коротку нотатку про зміну та виконані перевірки. Якщо щось не перевірено, зазнач це окремо.'],
+    ['Коли знаходиться помилка, ти записуєш, що варто врахувати в наступній задачі?','Припустімо, позначка з’явилася, але нові товари перестали додаватися. Після виправлення зберігаємо висновок: «Коли змінюємо список, перевіряємо і нову дію, і додавання товарів». Згодом цю перевірку можна закріпити тестом. Якщо подібних ситуацій ще не було, обери відповідний варіант.','Після виправлення помилки запиши одну перевірку або домовленість, яку варто використати наступного разу.']
+  ].map(([text,hint,next],i)=>({id:'q'+(i+1),number:i+1,group:Math.floor(i/2),text,hint,next}));
+  const own = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
+  const plain = o => o !== null && typeof o === 'object' && !Array.isArray(o);
+  function validateAnswers(answers, complete=false) {
+    if (!plain(answers) || Object.keys(answers).some(id=>!QUESTIONS.some(q=>q.id===id))) throw new Error('Невідомі запитання у файлі. Використай результат цієї анкети.');
+    for (const [id,answer] of Object.entries(answers)) if (typeof answer !== 'string' || !own(OPTIONS,answer)) throw new Error('Неприпустима відповідь у '+id+'.');
+    if (complete && Object.keys(answers).length !== QUESTIONS.length) throw new Error('У файлі мають бути відповіді на всі 10 запитань.');
+    return answers;
+  }
+  function calculate(answers) {
+    validateAnswers(answers);
+    const groups=GROUPS.map((name,id)=>({id,name,total:0,max:0,applicable:0,withoutExperience:0}));
+    for (const q of QUESTIONS) {
+      if (!own(answers,q.id)) continue;
+      const group=groups[q.group], points=OPTIONS[answers[q.id]].points;
+      if (points===null) group.withoutExperience++;
+      else {group.total+=points; group.max+=2; group.applicable++;}
+    }
+    return {answered:Object.keys(answers).length, total:groups.reduce((s,g)=>s+g.total,0), max:groups.reduce((s,g)=>s+g.max,0), applicable:groups.reduce((s,g)=>s+g.applicable,0), withoutExperience:groups.reduce((s,g)=>s+g.withoutExperience,0), groups};
+  }
+  const scoreText = result => result.max ? result.total+' / '+result.max : 'Поки немає досвіду для порівняння';
+  function nextStep(answers) {
+    validateAnswers(answers,true);
+    const q=QUESTIONS.find(q=>answers[q.id]==='C') || QUESTIONS.find(q=>answers[q.id]==='B') || QUESTIONS.find(q=>answers[q.id]==='D') || QUESTIONS[6];
+    return q.next;
+  }
+  function makeExport(answers,date=new Date().toISOString()) {
+    validateAnswers(answers,true);
+    return {version:VERSION,date,answers:{...answers},result:calculate(answers)};
+  }
+  const stable = value => JSON.stringify(value, function(key,item){return plain(item)?Object.fromEntries(Object.keys(item).sort().map(k=>[k,item[k]])):item;});
+  function parseImport(text) {
+    if (typeof text !== 'string' || text.length>32768) throw new Error('Файл завеликий. Вибери JSON, збережений цією анкетою.');
+    let data;
+    try {data=JSON.parse(text);} catch {throw new Error('Не вдалося прочитати JSON. Вибери файл result.json із цієї анкети.');}
+    if (!plain(data) || Object.keys(data).sort().join(',')!=='answers,date,result,version' || data.version!==VERSION) throw new Error('Цей файл не підходить. Вибери result.json, збережений у цій анкеті.');
+    if (typeof data.date !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(data.date) || !Number.isFinite(Date.parse(data.date)) || new Date(data.date).toISOString()!==data.date) throw new Error('Дата у файлі некоректна.');
+    validateAnswers(data.answers,true);
+    const expected=makeExport(data.answers,data.date);
+    if (stable(expected.result)!==stable(data.result)) throw new Error('Підрахунок у файлі не відповідає відповідям. Вибери незмінений експорт анкети.');
+    return expected;
+  }
+  function compare(previous,current) {
+    validateAnswers(previous,true); validateAnswers(current,true);
+    const rows=QUESTIONS.map(q=>({id:q.id,before:previous[q.id],after:current[q.id],delta:previous[q.id]==='D'||current[q.id]==='D'?null:OPTIONS[current[q.id]].points-OPTIONS[previous[q.id]].points}));
+    const sameApplicable=QUESTIONS.every(q=>(previous[q.id]==='D')===(current[q.id]==='D'));
+    const now=calculate(current), before=calculate(previous);
+    return {rows,sameApplicable,delta:sameApplicable&&now.max>0?now.total-before.total:null};
+  }
+  const deltaText = n => n===null?'Без числового порівняння':n>0?'+'+n:String(n);
+  function markdown(data,baseline=null) {
+    const safe=parseImport(JSON.stringify(data));
+    const lines=['# Як я працюю з AI: 10 простих запитань','','Дата: '+safe.date,'Версія: '+VERSION,'','Бали: '+scoreText(safe.result),'Відповідей без досвіду: '+safe.result.withoutExperience,'','Бали описують самооцінку звичок. Це не доказ роботи коду або зростання продуктивності.','','## Один наступний крок','',nextStep(safe.answers),'','## П’ять груп','','| Група | Бали | Відповідей без досвіду |','|---|---|---|'];
+    for (const g of safe.result.groups) lines.push('| '+g.name+' | '+scoreText(g)+' | '+g.withoutExperience+' |');
+    lines.push('','## Відповіді','','| № | Запитання | Відповідь | Бали |','|---|---|---|---|');
+    for(const q of QUESTIONS){const a=OPTIONS[safe.answers[q.id]];lines.push('| '+q.number+' | '+q.text+' | '+a.label+' | '+(a.points===null?'Без бала':a.points)+' |');}
+    if(baseline){const old=parseImport(JSON.stringify(baseline));const comparison=compare(old.answers,safe.answers);lines.push('','## Порівняння з першим результатом','','Дата першого результату: '+old.date,comparison.delta===null?'Загальну зміну балів не рахуємо. Порівняй відповіді по запитаннях.':'Зміна суми за тим самим набором запитань: '+deltaText(comparison.delta),'','| № | Раніше | Зараз | Зміна балів |','|---|---|---|---|');for(const r of comparison.rows)lines.push('| '+r.id.slice(1)+' | '+OPTIONS[r.before].label+' | '+OPTIONS[r.after].label+' | '+deltaText(r.delta)+' |');}
+    return lines.join('\n')+'\n';
+  }
+  return {VERSION,OPTIONS,GROUPS,QUESTIONS,calculate,scoreText,nextStep,makeExport,parseImport,compare,deltaText,markdown};
+})();
+</script>
+<script id="audit-ui">
+'use strict';
+(() => {
+  const A=globalThis.MiniAudit, byId=id=>document.getElementById(id);
+  let answers={}, baseline=null, current=null;
+  const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el;};
+  const row=(values,header=false)=>{const tr=node('tr');for(const value of values){const cell=node(header?'th':'td',value);if(header)cell.scope='col';tr.append(cell);}return tr;};
+  for(const q of A.QUESTIONS){
+    const field=node('fieldset');field.append(node('legend',q.number+'. '+q.text),node('p',A.GROUPS[q.group],'group'));
+    const hint=node('p',q.hint,'hint');hint.id='hint-'+q.id;field.setAttribute('aria-describedby',hint.id);field.append(hint);
+    const options=node('div',undefined,'options');
+    for(const [value,option] of Object.entries(A.OPTIONS)){
+      const label=node('label',undefined,'choice'),input=node('input');input.type='radio';input.name=q.id;input.value=value;
+      input.addEventListener('change',()=>{answers[q.id]=value;render();});label.append(input,node('span',option.label));options.append(label);
+    }
+    field.append(options);byId('questions').append(field);
+  }
+  function render(){
+    const result=A.calculate(answers), complete=result.answered===10;
+    byId('progress').value=result.answered;byId('progress-text').textContent='Відповідей: '+result.answered+' із 10'+(complete?' · результат нижче':'');
+    byId('results').hidden=!complete;byId('download-md').disabled=!complete;byId('download-json').disabled=!complete;
+    if(!complete){current=null;return;}
+    current=A.makeExport(answers);
+    byId('overall').textContent=A.scoreText(result);byId('experience').textContent='Відповідей «Ще не було такої ситуації»: '+result.withoutExperience+' із 10. Вони не входять у суму та її максимум.';
+    byId('next-step').textContent=A.nextStep(answers);
+    const groups=byId('group-table').tBodies[0];groups.replaceChildren();for(const g of result.groups)groups.append(row([g.name,A.scoreText(g),g.withoutExperience]));
+    const table=byId('question-table');table.tHead.replaceChildren(row(baseline?['№','Запитання','Раніше','Зараз','Зміна балів']:['№','Запитання','Відповідь','Бали'],true));table.tBodies[0].replaceChildren();
+    const comparison=baseline?A.compare(baseline.answers,answers):null;
+    for(const q of A.QUESTIONS){const answer=A.OPTIONS[answers[q.id]];table.tBodies[0].append(row(baseline?[q.number,q.text,A.OPTIONS[baseline.answers[q.id]].label,answer.label,A.deltaText(comparison.rows[q.number-1].delta)]:[q.number,q.text,answer.label,answer.points===null?'Без бала':answer.points]));}
+    byId('comparison').hidden=!baseline;
+    if(comparison)byId('comparison').textContent=comparison.delta!==null?'Зміна суми за тим самим набором запитань: '+A.deltaText(comparison.delta)+'. Подивися нижче, які саме відповіді змінилися.':comparison.sameApplicable?'В обох проходженнях поки немає досвіду для числового порівняння. Почни з простого кроку нижче.':'Набір запитань із досвідом змінився, тому загальну зміну балів не рахуємо. Порівняй кожну відповідь у таблиці.';
+  }
+  byId('import-file').addEventListener('change',async event=>{
+    const file=event.target.files[0];if(!file)return;
+    try{if(file.size>32768)throw new Error('Файл завеликий. Вибери JSON, збережений цією анкетою.');const imported=A.parseImport(await file.text());baseline=imported;byId('baseline-note').textContent='Попередній результат від '+new Date(imported.date).toLocaleString('uk-UA')+' завантажено для порівняння. Поточні відповіді не змінені.';byId('baseline-note').hidden=false;byId('remove-baseline').hidden=false;byId('message').textContent='';render();}
+    catch(error){byId('message').textContent='Імпорт не виконано. '+error.message+' Поточні відповіді та попереднє порівняння залишені без змін.';}
+    finally{event.target.value='';}
+  });
+  byId('remove-baseline').addEventListener('click',()=>{baseline=null;byId('baseline-note').hidden=true;byId('remove-baseline').hidden=true;byId('message').textContent='';render();});
+  function download(name,type,content){const url=URL.createObjectURL(new Blob([content],{type}));const link=node('a');link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  byId('download-json').addEventListener('click',()=>{if(current)download('result.json','application/json;charset=utf-8',JSON.stringify(current,null,2)+'\n');});
+  byId('download-md').addEventListener('click',()=>{if(current)download('ai-first-step.md','text/markdown;charset=utf-8',A.markdown(current,baseline));});
+  render();
+})();
+</script>
+</body>
+</html>
