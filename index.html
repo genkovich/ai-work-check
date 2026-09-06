@@ -329,9 +329,9 @@ globalThis.MiniAudit = (() => {
       const s=seamSummary(result), name=g=>g.name+' ('+g.total+' з '+g.max+')';
       if (!s.strong.length && !s.middle.length && !s.weak.length) return 'Поки немає досвіду для порівняння: усі відповіді без досвіду.';
       const parts=[];
-      if (s.strong.length) parts.push('Тримаються: '+s.strong.map(name).join(', ')+'.');
+      if (s.strong.length) parts.push('Сильні: '+s.strong.map(name).join(', ')+'.');
       if (s.middle.length) parts.push('Посередині: '+s.middle.map(name).join(', ')+'.');
-      if (s.weak.length) parts.push('Просідають: '+s.weak.map(name).join(', ')+'.');
+      if (s.weak.length) parts.push('Слабкі: '+s.weak.map(name).join(', ')+'.');
       return parts.join(' ');
     }
     function nextStep(answers) {
