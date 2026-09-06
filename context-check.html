@@ -3,262 +3,244 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Другий урок: десять кроків, щоб підготувати контекст проєкту та перевірити його свіжою сесією AI. Усі команди й промпти поруч.">
+<meta name="description" content="Context Engineering: готові інструкції, карта через survey, вкладені правила та перевірка нової сесії.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Контекст, з яким можна продовжити роботу · Урок 2</title>
+<title>Context Engineering: перевіряємо контекст проєкту · Урок 2</title>
 <style>
 :root{color-scheme:light;--ink:#202b28;--muted:#50615a;--paper:#f5f4ee;--line:#d4ddd5;--accent:#22533e;--soft:#e7eee5}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 system-ui,-apple-system,sans-serif}main{max-width:920px;margin:auto;padding:38px 24px 72px}h1{font-size:clamp(30px,5vw,48px);line-height:1.15;letter-spacing:-.035em;margin:12px 0 22px;max-width:770px}h2{font-size:25px;line-height:1.3;margin:0 0 18px}h3{font-size:18px;line-height:1.4;margin:25px 0 10px}p{max-width:770px}.eyebrow{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent)}.intro{font-size:20px}.muted,small{color:var(--muted)}a{color:var(--accent);text-underline-offset:3px;overflow-wrap:anywhere}.note{padding:15px 19px;border-left:3px solid var(--accent);background:var(--soft);font-size:15px}.step{border:1px solid var(--line);border-radius:16px;background:#fff;padding:26px;margin:26px 0;scroll-margin-top:120px}.step.done{border-color:var(--accent)}.step p:last-child{margin-bottom:0}.label{font-weight:700;color:var(--accent)}code{font: .88em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:var(--soft);padding:2px 4px;border-radius:4px}pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;background:#f0f3ed;border:1px solid var(--line);border-radius:9px;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}pre code{font:inherit;background:none;padding:0}.copy{font-size:14px;padding:8px 12px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:20px 0}button{font:inherit;font-weight:600;line-height:1.35;padding:12px 18px;border:1px solid var(--accent);border-radius:10px;color:var(--accent);background:#fff;cursor:pointer}button.primary{background:var(--accent);color:#fff}button:hover{box-shadow:0 2px 0 var(--accent)}:focus-visible{outline:3px solid #936024;outline-offset:4px}label{cursor:pointer}input[type=checkbox]{accent-color:var(--accent);width:19px;height:19px;flex:none;margin:4px 0 0}.check{display:flex;align-items:flex-start;gap:12px;padding:15px;background:var(--soft);border-radius:9px;margin-top:24px;font-size:16px}.remember{display:flex;align-items:flex-start;gap:10px;font-size:15px}.progress{position:sticky;top:0;z-index:2;background:var(--paper);padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}.progress progress{width:100%;height:7px;accent-color:var(--accent);display:block;margin-top:6px}.table-wrap{overflow-x:auto;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:15px;text-align:left}th,td{padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--soft)}td{min-width:145px}summary{font-weight:600;cursor:pointer}#storage-status,#copy-status{font-size:14px;color:var(--muted)}#completion{background:var(--soft);padding:18px;border-radius:10px}[hidden]{display:none!important}.foot{font-size:14px;margin-top:35px}@media(max-width:560px){main{padding:24px 16px 45px}.step{padding:20px 16px}h2{font-size:22px}.toolbar>*{width:100%}pre{padding:12px;font-size:13px}}@media print{body{background:#fff}.toolbar,.progress,.remember,.copy,#storage-status,#copy-status{display:none}main{max-width:none;padding:0}.step{break-inside:avoid;border-radius:0}details{display:block}}
-</style>
+textarea{display:block;width:100%;min-height:110px;resize:vertical;font:15px/1.6 system-ui,sans-serif;padding:12px;border:1px solid var(--line);border-radius:8px;margin:8px 0 20px}#evidence label{display:block;font-weight:600}@media print{textarea{min-height:140px}}</style>
 </head>
 <body>
 <main>
 <header>
 <div class="eyebrow">Мінікурс · урок 2</div>
-<h1>Контекст, з яким можна продовжити роботу</h1>
-<p class="intro">Уяви, що завтра відкриваєш нову розмову з AI. Як пояснити, що вже працює, що плануємо змінити та чого не можна чіпати? Зараз зберемо такий запис на невеликому навчальному проєкті й перевіримо, чи можна за ним продовжити роботу.</p>
-<p>Пройди десять кроків по черзі. Наприкінці у твоїй копії пакета будуть два власні файли: <code>docs/practice/02-context.md</code> і <code>docs/practice/handoff.md</code>. Нову можливість дашборда тут ще не реалізуємо. Усі команди, промпти й короткі пояснення є на цій сторінці; інший навчальний репозиторій не потрібен.</p>
+<h1>Context Engineering: перевіряємо контекст проєкту</h1>
+<p class="intro">Агенту потрібні точні інструкції й зрозумілий опис проєкту. На готовому застосунку перевіримо основні та вкладені правила, створимо карту через survey і подивимося, чи нова сесія правильно розбереться в роботі.</p>
+<p>Основні файли вже підготовлені. Єдиний обовʼязковий новий документ у проєкті: <code>docs/architecture-map.md</code>. Власні результати запишеш у поля цієї сторінки й експортуєш одним файлом. Реалізацію ще не починаємо.</p>
+<p class="muted">Маршрут оновлено: старі позначки попередньої вправи не переносяться, бо кроки тепер інші.</p>
 <p class="note">Позначки нижче допомагають пам’ятати місце зупинки. Сторінка не бачить твого термінала, файлів чи розмови з AI та не перевіряє виконання команд. Вона не просить контакти й не надсилає дані назовні. На публічній вебсторінці GitHub обробляє звичайні дані відвідування.</p>
 </header>
 <label class="remember"><input id="remember" type="checkbox">Зберігати лише ці десять позначок у цьому браузері на цьому пристрої</label>
 <p id="storage-status" role="status">Без автоматичного збереження. Можна завантажити чекліст перед закриттям сторінки.</p>
-<div class="toolbar"><button id="download" class="primary" type="button">Зберегти чекліст текстом</button><button id="reset" type="button">Скинути позначки</button></div>
+<div class="toolbar"><button id="download" class="primary" type="button">Зберегти результат текстом</button><button id="reset" type="button">Скинути позначки</button></div>
 <p id="copy-status" role="status" aria-live="polite"></p>
 <div class="progress"><span id="progress-text" role="status" aria-live="polite">Позначено: 0 із 10</span><progress id="progress" max="10" value="0" aria-label="Позначені кроки"></progress></div>
 <noscript><p class="note">Інструкції можна читати без JavaScript. Для підрахунку позначок, копіювання та збереження чекліста увімкни JavaScript або залиш власну нотатку про місце зупинки.</p></noscript>
 
 <article class="step" id="step-1" data-step="1">
-<h2>1. Відкрий навчальний пакет</h2>
-<p><span class="label">Що робити.</span> Увійди у свій GitHub-акаунт і відкрий <a href="https://github.com/genkovich/agentic-engineering-mini-kit">приватний пакет мінікурсу</a>. Натисни <strong>Code → Download ZIP</strong>, дочекайся завантаження й розпакуй архів. На Windows вибери <strong>Extract All / Видобути все</strong>, на macOS відкрий архів подвійним натисканням. Працюємо з розпакованою текою. Початковий ZIP залиш для порівняння наприкінці уроку.</p>
-<p>Якщо бачиш відмову в доступі чи 404, постав відео на паузу. Перевір акаунт і прийняте запрошення, потім звернися до команди курсу. Не змінюй видимість репозиторію та не шукай заміну в іншому пакеті. Публічний чекліст не надає доступу до приватного коду.</p>
-<details><summary>Замість ZIP: HTTPS-копія, якщо вже користуєшся Git</summary><p>У терміналі перейди у свою теку для навчальних проєктів і виконай дві команди. Це альтернатива ZIP. Якщо Git просить авторизацію, використовуй свій налаштований GitHub-вхід; токени в документи чи промпти не вставляй. Наявну теку з такою назвою не перезаписуй.</p><pre id="command-clone"><code>git clone https://github.com/genkovich/agentic-engineering-mini-kit.git
-cd agentic-engineering-mini-kit</code></pre><button class="copy" data-copy="command-clone" type="button">Копіювати команди Git</button></details>
-<p>У розпакованій теці знайди <code>package.json</code>. Назва теки може закінчуватися на <code>-main</code>; орієнтуйся на файли всередині. У <a href="https://code.visualstudio.com/download">VS Code</a> вибери <strong>File → Open Folder / Файл → Відкрити теку</strong> й відкрий саме цю теку. Можеш користуватися своїм редактором. Потім відкрий <strong>Terminal → New Terminal / Термінал → Новий термінал</strong> і введи команди нижче по одній, після кожної натискаючи Enter.</p>
-<pre id="command-1"><code>node --version
-npm --version</code></pre><button class="copy" data-copy="command-1" type="button">Копіювати команди</button>
-<p>Для курсу потрібен Node.js 22 або 24: перша команда має показати <code>v22.</code> чи <code>v24.</code> на початку версії, друга номер npm. Якщо команда не знайдена, відкрий <a href="https://nodejs.org/en/download">офіційне завантаження Node.js</a>, вибери 22 або 24 та інсталятор своєї ОС. Після встановлення відкрий новий термінал і перевір версії повторно. Поки це не працює, далі не переходь. Агента відкриємо у кроці 4; SDD й плагіни зараз не потрібні.</p>
-<p><span class="label">Що має бути видно.</span> Поряд лежать <code>package.json</code>, <code>server.js</code>, теки <code>lib/</code>, <code>views/</code>, <code>fixtures/</code> і <code>templates/</code>. Команди показують версії інструментів.</p>
-<label class="check"><input type="checkbox" data-check="1">Познач, коли відкрито саме цю теку, є доступ до пакета й потрібні інструменти.</label>
+<h2>1. Завантаж і відкрий проєкт</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Увійди у GitHub і відкрий <a href="https://github.com/genkovich/agentic-engineering-mini-kit">пакет курсу</a>. Для 404 перевір акаунт і прийняте запрошення; звернися до команди курсу, якщо доступу немає. Публічний чекліст не надає доступу до коду.</p>
+<p>Потрібні <a href="https://git-scm.com/downloads">Git</a>, <a href="https://nodejs.org/en/download">Node.js 22 або 24</a> і редактор, наприклад <a href="https://code.visualstudio.com/download">VS Code</a>. Відкрий термінал у своїй теці навчальних проєктів поза іншими Git-репозиторіями. Скопіюй кіт:</p>
+<pre id="block-1"><code>git clone https://github.com/genkovich/agentic-engineering-mini-kit.git
+cd agentic-engineering-mini-kit</code></pre><button class="copy" data-copy="block-1" type="button">Копіювати</button>
+<p>Не перезаписуй наявну теку. При авторизації користуйся своїм GitHub-входом, не вставляй токени в промпти.</p>
+<p>Альтернатива: <strong>Code → Download ZIP</strong>, потім розпакуй архів. На Windows це <strong>Extract All / Видобути все</strong>. У редакторі вибери <strong>File → Open Folder</strong>, відкрий теку з <code>package.json</code>, потім <strong>Terminal → New Terminal</strong>.</p>
+<pre id="block-2"><code>node --version
+npm --version
+git --version</code></pre><button class="copy" data-copy="block-2" type="button">Копіювати</button>
+<p>Після встановлення інструментів відкрий новий термінал. При відсутній команді не переходь далі.</p>
+<p><span class="label">Що має бути видно.</span> У редакторі є package.json і server.js. Node показує v22. або v24.; npm і Git показують свої версії.</p>
+<label class="check"><input type="checkbox" data-check="1">Познач, коли відкрито потрібну копію й інструменти запускаються.</label>
 </article>
-
 <article class="step" id="step-2" data-step="2">
-<h2>2. Подивися на перевірки до змін</h2>
-<p><span class="label">Що робити.</span> У терміналі біля <code>package.json</code> встанови залежності з файлу фіксації версій. Це потребує інтернету.</p>
-<pre id="command-2"><code>npm ci</code></pre><button class="copy" data-copy="command-2" type="button">Копіювати команду</button>
-<p>Дочекайся завершення: термінал знову запропонує ввести команду. Кількість встановлених пакетів може відрізнятися від екрана лектора. Якщо є помилка, збережи її текст і постав відео на паузу. При <code>ENOENT</code> із згадкою <code>package.json</code> перевір, чи термінал відкрито в корені пакета. До перевірок переходь після успішного встановлення.</p>
-<pre id="command-verify"><code>npm run verify</code></pre><button class="copy" data-copy="command-verify" type="button">Копіювати команду</button>
-<p><span class="label">Що має бути видно.</span> У незміненому скелеті очікуємо два тести без помилок: перевірку health-відповіді та HTML-оболонки з CSP. Вони ще не перевіряють список сесій, бо його немає. Перед тестами <code>preverify</code> вирівнює дати навчальних фікстур.</p>
-<p>Збережи фактичний підсумок свого запуску: команду, кількість тестів і результат. Пізніше перенесеш його у власну нотатку. Очікування на цій сторінці та приклади лектора не є виводом твого термінала.</p>
-<p>Орієнтир для читання підсумку наведено нижче. Це приклад очікування, не результат твого запуску; оформлення рядків може відрізнятися.</p><pre><code>tests 2
+<h2>2. Перевір і запусти застосунок</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Встанови залежності у звичайному терміналі:</p>
+<pre id="block-3"><code>npm ci</code></pre><button class="copy" data-copy="block-3" type="button">Копіювати</button>
+<p>Дочекайся завершення: термінал знову запропонує ввід. При <code>ENOENT</code> зі згадкою <code>package.json</code> перевір теку. Інші помилки спочатку прочитай і виправ; відео можна поставити на паузу.</p>
+<pre id="block-4"><code>npm run verify</code></pre><button class="copy" data-copy="block-4" type="button">Копіювати</button>
+<p>Це два тести скелета: health-відповідь і HTML-оболонка. Приклад очікування, не результат твого запуску:</p>
+<pre id="block-5"><code>tests 2
 pass 2
-fail 0</code></pre>
-<label class="check"><input type="checkbox" data-check="2">Познач після успішного запуску й збереження його фактичного підсумку. Якщо запуск зупинився, спочатку розбери причину нижче.</label>
+fail 0</code></pre><button class="copy" data-copy="block-5" type="button">Копіювати</button>
+<p>Збережи фактичний підсумок у звичайних нотатках або історії термінала. Окремий документ за шаблоном для цього не потрібен.</p>
+<p>У терміналі запусти:</p>
+<pre id="block-6"><code>npm run demo</code></pre><button class="copy" data-copy="block-6" type="button">Копіювати</button>
+<p>Дочекайся адреси <code>http://127.0.0.1:4180</code>, відкрий її в браузері. Термінал зайнятий сервером. Для наступних команд вибери <strong>Terminal → New Terminal</strong> у тій самій теці. Зупинка сервера: <strong>Ctrl+C</strong>.</p>
+<p>На диску є шість файлів сесій у трьох проєктах, але застосунок ще не збирає список. Вкладені <code>subagents/</code> та <code>tool-results/</code> сесіями нашого переліку не вважаємо. Фікстури означають штучні навчальні дані; особисті розмови тут не потрібні.</p>
+<p><code>scripts/demo.mjs</code> явно задає фікстури й порт 4180; <code>predemo</code> вирівнює їхні дати. Не запускай <code>npm start</code> і не підключай <code>~/.claude</code>. За бажанням відкрий <code>http://127.0.0.1:4180/api/health</code>: <code>claudeHome</code> має вказувати на <code>fixtures/claude-home</code>. При <code>EADDRINUSE</code> зупини власний попередній сервер; невідомі процеси не чіпай.</p>
+<p><span class="label">Що має бути видно.</span> Два стартові тести проходять; на 127.0.0.1:4180 видно No slice is wired up yet. Health вказує на fixtures/claude-home.</p>
+<label class="check"><input type="checkbox" data-check="2">Познач після фактичного запуску тестів і навчального сервера.</label>
 </article>
-
 <article class="step" id="step-3" data-step="3">
-<h2>3. Відкрий те, що працює зараз</h2>
-<p><span class="label">Що робити.</span> Запусти навчальний дашборд командою нижче. Дочекайся повідомлення з адресою <code>http://127.0.0.1:4180</code>, скопіюй її в адресний рядок браузера й відкрий. Залиш цей термінал працювати. Він зайнятий сервером, тому не показує нового запрошення вводу; це очікувано. Для подальших команд вибери <strong>Terminal → New Terminal</strong> у тій самій теці.</p>
-<pre id="command-3"><code>npm run demo</code></pre><button class="copy" data-copy="command-3" type="button">Копіювати команду</button>
-<p><span class="label">Що має бути видно.</span> На сторінці є напис <code>No slice is wired up yet.</code> Це очікуваний порожній екран. У фікстурах лежать шість файлів сесій у трьох проєктах, але код ще не збирає їх у список. Тому шість файлів на диску та нуль показаних сесій не суперечать одне одному.</p>
-<p><code>npm run demo</code> через <code>scripts/demo.mjs</code> явно задає навчальну <code>fixtures/claude-home</code> і порт 4180, навіть якщо в терміналі раніше були інші значення. Перед запуском <code>predemo</code> вирівнює дати фікстур. Для цієї практики не запускай <code>npm start</code> на особистих логах і не підключай <code>~/.claude</code>. Коли завершиш роботу з дашбордом, зупини його через <code>Ctrl+C</code>.</p>
-<label class="check"><input type="checkbox" data-check="3">Познач, коли бачиш порожню сторінку й можеш пояснити, чому файли сесій ще не показані.</label>
+<h2>3. Підготуй Git, агента й SDD</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Після clone перевір корінь. Він має бути саме текою пакета, а не батьківським проєктом:</p>
+<pre id="block-7"><code>git rev-parse --show-toplevel
+git status --short</code></pre><button class="copy" data-copy="block-7" type="button">Копіювати</button>
+<p>Після ZIP спочатку виконай <code>git init</code> саме в розпакованій теці з <code>package.json</code>, потім перевір корінь командами вище. Якщо корінь не збігається, не запускай SDD: перенеси копію поза інший репозиторій.</p>
+<p>Для обох способів перевір автора комітів:</p>
+<pre id="block-8"><code>git config user.name
+git config user.email</code></pre><button class="copy" data-copy="block-8" type="button">Копіювати</button>
+<p>Якщо значень немає, задай їх локально. Заміни текст у лапках своїм імʼям та дозволеною для комітів адресою (можна власною GitHub noreply):</p>
+<pre id="block-9"><code>git config user.name "YOUR NAME"
+git config user.email "YOUR COMMIT EMAIL"</code></pre><button class="copy" data-copy="block-9" type="button">Копіювати</button>
+<p><strong>Лише після ZIP:</strong> переглянь <code>git status --short</code>, переконайся, що це тільки навчальні файли без секретів, і зроби початковий коміт:</p>
+<pre id="block-10"><code>git add .
+git diff --cached --stat
+git commit -m "Start mini-course practice"</code></pre><button class="copy" data-copy="block-10" type="button">Копіювати</button>
+<p>Clone вже має початкову історію; ці команди йому не потрібні. Відкрий <code>.claude/sdd.local.example.md</code> у редакторі й через <strong>File → Save As</strong> збережи копію як <code>.claude/sdd.local.md</code>. Наявні власні налаштування не перезаписуй. Цей локальний файл уже виключено з Git.</p>
+<pre id="block-11"><code>git rev-parse HEAD</code></pre><button class="copy" data-copy="block-11" type="button">Копіювати</button>
+<p>Збережи повний хеш поза пакетом. У фінальних командах він замінить <code>BASE_COMMIT</code>. Survey робить коміт, тому лише звичайного diff наприкінці буде недостатньо.</p>
+<h3>Claude Code: основний показ у відео</h3>
+<p>У звичайному терміналі перевір:</p>
+<pre id="block-12"><code>claude --version</code></pre><button class="copy" data-copy="block-12" type="button">Копіювати</button>
+<p>Якщо команда відсутня, вибери інсталятор своєї ОС з <a href="https://code.claude.com/docs/en/quickstart">офіційного Quickstart</a>. Він завантажує і запускає програму; перевір адресу.</p>
+<p>macOS, Linux або WSL:</p>
+<pre id="block-13"><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre><button class="copy" data-copy="block-13" type="button">Копіювати</button>
+<p>Windows, саме PowerShell:</p>
+<pre id="block-14"><code>irm https://claude.ai/install.ps1 | iex</code></pre><button class="copy" data-copy="block-14" type="button">Копіювати</button>
+<p>Відкрий новий термінал і повтори <code>claude --version</code>. За потреби є <a href="https://code.claude.com/docs/en/troubleshoot-install">діагностика встановлення</a>. Встановлена програма ще потребує акаунта з доступом до Claude Code. Виклики агента оплачуються за твоїм тарифом; сам дашборд і тести модель не викликають.</p>
+<pre id="block-15"><code>claude</code></pre><button class="copy" data-copy="block-15" type="button">Копіювати</button>
+<p>Під час першого запуску пройди вхід за підказками. Повторний вхід: <code>/login</code> усередині Claude Code. Перевір показану теку проєкту. Тепер <strong>усередині Claude Code</strong> вводь команди по одній:</p>
+<pre id="block-16"><code>/plugin marketplace add genkovich/sdd
+/plugin install sdd@sdd
+/reload-plugins</code></pre><button class="copy" data-copy="block-16" type="button">Копіювати</button>
+<p>SDD додає готові інструкції для роботи з проєктом. Відкрий список через <code>/</code> і знайди <code>/sdd:survey</code>. Якщо команда відсутня, перевір повідомлення встановлення, перезавантаж плагіни або перезапусти Claude Code. <a href="https://github.com/genkovich/sdd">Репозиторій SDD</a> містить інструкції.</p>
+<h3>Якщо працюєш у Codex або Cursor</h3>
+<p>Встановлюй SDD лише для свого інструмента. На Windows наступний скрипт запускай у Git Bash або WSL, не в PowerShell. Він завантажує й виконує код; перевір адресу.</p>
+<p>Codex CLI: відкрий корінь пакета, перевір <code>codex --version</code>. За потреби є <a href="https://developers.openai.com/codex/cli">офіційний запуск</a>. У звичайному терміналі виконай:</p>
+<pre id="block-17"><code>curl -fsSL https://raw.githubusercontent.com/genkovich/sdd/main/install.sh | bash -s -- codex</code></pre><button class="copy" data-copy="block-17" type="button">Копіювати</button>
+<p>Перезапусти Codex у цьому проєкті. Команда карти у розмові: <code>$sdd-survey</code>. Не встановлюй одночасно marketplace-варіант SDD: він має інші назви команд.</p>
+<p>Cursor: відкрий цю саму теку й у звичайному терміналі виконай:</p>
+<pre id="block-18"><code>curl -fsSL https://raw.githubusercontent.com/genkovich/sdd/main/install.sh | bash -s -- cursor</code></pre><button class="copy" data-copy="block-18" type="button">Копіювати</button>
+<p>Перезапусти Cursor або виконай <strong>Developer: Reload Window</strong>. У чаті введи <code>/</code> та вибери <code>sdd-survey</code>.</p>
+<p>Для Codex скрипт додає <code>.agents/skills/</code> і <code>.codex/agents/</code>, для Cursor <code>.cursor/skills/</code> і <code>.cursor/agents/</code>. Це очікувані файли встановлення; код застосунку вони не реалізують.</p>
+<p><span class="label">Що має бути видно.</span> Корінь Git збігається з текою пакета. Початковий хеш збережено, локальні налаштування є, survey доступний у вибраному агенті.</p>
+<label class="check"><input type="checkbox" data-check="3">Познач, коли один обраний інструмент готовий до роботи.</label>
 </article>
-
 <article class="step" id="step-4" data-step="4">
-<h2>4. Звір пояснення з кодом</h2>
-<p><span class="label">Що робити.</span> Відкрий п’ять файлів із таблиці. Готова <code>docs/architecture-map.md</code> допоможе знайти потрібне місце, але кожне твердження звір із поточним кодом. Номери рядків можуть змінюватися, тому записуй також назву функції.</p>
-<div class="table-wrap"><table><thead><tr><th>Файл</th><th>Що знайти зараз</th></tr></thead><tbody>
-<tr><td><code>server.js</code></td><td>Маршрути <code>/api/health</code> і <code>/</code>; прямий імпорт <code>claudeHome</code> з адаптера.</td></tr>
-<tr><td><code>lib/claude/index.js</code></td><td><code>claudeHome()</code>, <code>projectsDir()</code> та реєстрацію джерела. Читання сесій ще немає.</td></tr>
-<tr><td><code>lib/sources.js</code></td><td><code>registerSource()</code>, <code>listSources()</code>. Реєстр зараз передає дані лише health-маршруту.</td></tr>
-<tr><td><code>views/layout.js</code></td><td><code>layout()</code>, <code>esc()</code>, <code>empty()</code> та CSP у HTML.</td></tr>
-<tr><td><code>test/skeleton.test.js</code></td><td>Дві наявні перевірки. Жодна ще не приймає майбутній список сесій.</td></tr>
-</tbody></table></div>
-<p>Ось короткі уривки поточного коду для орієнтації. У своєму редакторі перевір і навколишній код.</p>
-<pre id="reference-current"><code>// server.js
-import { claudeHome } from './lib/claude/index.js';
-import { listSources } from './lib/sources.js';
-
-// lib/claude/index.js
-export function projectsDir() {
-  return join(claudeHome(), 'projects');
-}
-
-// lib/sources.js: поточна перевірка полів реєстрації
-for (const field of ['id', 'label', 'home']) {</code></pre>
-<p><span class="label">Що має бути видно.</span> Коментар у <code>lib/sources.js</code> каже, що дашборд не імпортує адаптери напряму, але <code>server.js</code> це робить. Коментар також описує майбутні методи читання. Це намір, який ще не реалізовано. Занотуй розбіжність; виправляти runtime-код у цьому уроці не потрібно.</p>
-<h3>Тепер відкрий Claude Code</h3>
-<p>У новому терміналі біля <code>package.json</code> перевір встановлення:</p><pre id="command-claude-version"><code>claude --version</code></pre><button class="copy" data-copy="command-claude-version" type="button">Копіювати команду</button>
-<details><summary>Команда claude не знайдена: встановлення перед продовженням</summary><p>Постав відео на паузу. Нижче команди з <a href="https://code.claude.com/docs/en/quickstart">офіційного Quickstart</a>. Вибери лише блок своєї ОС. Він завантажує й запускає інсталятор Claude Code; перевір адресу перед виконанням.</p><p>macOS, Linux або WSL, звичайний термінал:</p><pre id="install-unix"><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre><button class="copy" data-copy="install-unix" type="button">Копіювати для macOS / Linux / WSL</button><p>Windows, саме PowerShell:</p><pre id="install-windows"><code>irm https://claude.ai/install.ps1 | iex</code></pre><button class="copy" data-copy="install-windows" type="button">Копіювати для PowerShell</button><p>Дочекайся завершення, відкрий новий термінал і повтори <code>claude --version</code>. Якщо команда досі не працює, звір текст помилки з <a href="https://code.claude.com/docs/en/troubleshoot-install">інструкцією діагностики</a>. Не переходь до промпту, поки програма не запускається.</p></details>
-<p>Встановлена програма ще потребує акаунта або доступу організації, який підтримує Claude Code. Виклики агента оплачуються за твоїм тарифом; сам дашборд і тести модель не викликають. Коли бачиш номер версії, введи в цьому терміналі:</p><pre id="command-claude"><code>claude</code></pre><button class="copy" data-copy="command-claude" type="button">Копіювати команду</button>
-<p>Під час першого запуску пройди вхід за підказками. Для повторного входу є <code>/login</code> всередині Claude Code, не у звичайному shell. Перевір показану теку проєкту. Далі копіюй промпти в розмову з агентом; команди npm залишаються у звичайному терміналі.</p>
-<pre id="prompt-4"><code>Прочитай CLAUDE.md і лише ці п’ять файлів:
-server.js, lib/claude/index.js, lib/sources.js,
-views/layout.js, test/skeleton.test.js.
-Нічого не змінюй і не запускай команди. Особисті логи не відкривай.
-Поясни, що зараз відбувається після відкриття / і /api/health.
-Назви файли та функції, які це підтверджують.
-Чи є вже функція, яка читає список сесій із диска?
-Відділи виконуваний код від намірів у коментарях.</code></pre><button class="copy" data-copy="prompt-4" type="button">Копіювати перший промпт</button>
-<p>Дочекайся відповіді й звір її з відкритими файлами. Вказівка «нічого не змінюй» задає межу завдання, але сама по собі не забирає технічного права запису. Переглядай запропоновані дії й не дозволяй виходити за межі вправи.</p>
-<details><summary>Якщо відповідь нечітка: Zero-shot, One-shot і Few-shot</summary>
-<p>Усі варіанти нижче стосуються однієї задачі: відділити готове від запланованого. Спочатку відкрий <code>server.js</code>, маршрут <code>GET /</code>: він показує порожню сторінку. Потім знайди S1 у <code>docs/roadmap.md</code>: список сесій там поки запланований.</p>
-<p><strong>Zero-shot</strong> означає запит без прикладу готової відповіді: «Прочитай ці файли й запиши висновки у форматі “твердження | стан | джерело”. Невідоме познач окремо. Файли не змінюй».</p>
-<p>Додай зразок «GET / показує порожню сторінку | є зараз | server.js». Це <strong>One-shot</strong>, один приклад. Якщо додати ще «Список сесій, новіші першими | заплановано | docs/roadmap.md, S1», отримаємо <strong>Few-shot</strong>, кілька прикладів.</p>
-<p>Shot тут означає зразок виконання задачі в запиті. Це не перенавчання моделі й не кількість повідомлень. Вибери один варіант; надсилати всі по черзі не потрібно. Якщо початкова відповідь уже зрозуміла, пропусти уточнення. Нові висновки однаково перевір за файлами.</p>
-</details>
-<label class="check"><input type="checkbox" data-check="4">Познач, коли можеш відділити теперішню поведінку від плану й показати розбіжність між коментарем та імпортом.</label>
+<h2>4. Прочитай основні інструкції</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Відкрий <code>AGENTS.md</code> і <code>CLAUDE.md</code> у редакторі. Перший містить постійні інструкції, другий лише підключає їх для Claude Code через <code>@AGENTS.md</code>. Так зміст не доводиться підтримувати у двох копіях.</p>
+<pre id="block-19"><code>Прочитай AGENTS.md і README.md. Нічого не змінюй.
+Поясни, що вже працює в застосунку, яку зміну плануємо
+та якою командою перевіряємо початковий код.
+Покажи, де записані правила для роботи з HTML і даними сесій.
+Якщо AGENTS.md довелося відкрити явно, зазнач це.
+Явне читання не доводить автоматичного завантаження інструкцій.</code></pre><button class="copy" data-copy="block-19" type="button">Копіювати</button>
+<p>Знайди команди запуску, вказівку прочитати вкладені інструкції й посилання на політику даних. Для цього уроку базові файли вже підготовлені; генерувати нові не потрібно. Якщо інструкція точна, залиш її без змін. Якщо знаходиш реальну неточність, спочатку обговори конкретне виправлення.</p>
+<p><span class="label">Що має бути видно.</span> Агент пояснює стартовий застосунок і вказує, де лежать спеціальні інструкції. Ти можеш знайти ці місця у файлі.</p>
+<label class="check"><input type="checkbox" data-check="4">Познач після власної звірки пояснення.</label>
 </article>
-
 <article class="step" id="step-5" data-step="5">
-<h2>5. Прочитай правила там, де вони потрібні</h2>
-<p><span class="label">Що робити.</span> Прочитай кореневий <code>CLAUDE.md</code>, вкладений <code>views/CLAUDE.md</code> і <code>.claude/rules/session-index.md</code>. Вони вже є в цьому пакеті. Кореневі правила залишаються чинними для всієї роботи.</p>
-<pre id="reference-rules"><code>CLAUDE.md
-views/
-  CLAUDE.md
-  layout.js
-.claude/rules/
-  session-index.md
-
-# Початок .claude/rules/session-index.md
----
-paths: ["lib/claude/**/*.js"]
----</code></pre>
-<p>У <code>views/CLAUDE.md</code> шукай вказівку використовувати наявні <code>layout()</code> і <code>esc()</code>, зберегти CSP та не вводити UI-фреймворк для S1. Правило для <code>session-index</code> стосується майбутнього індексу: лише метадані, без читання тіла JSONL і без вкладених артефактів. Це межі S1; наступні можливості можуть потребувати читання вмісту.</p>
-<p>Шаблон шляху <code>lib/claude/**/*.js</code> охоплює <code>lib/claude/index.js</code>, але не <code>views/layout.js</code>. Для останнього важливий вкладений файл у <code>views/</code>. За <a href="https://code.claude.com/docs/en/memory">документацією Claude Code</a>, вкладені інструкції та правила з <code>paths</code> завантажуються при читанні відповідних файлів. Це спосіб доставити інструкції в контекст, а не технічна заборона небезпечної дії.</p>
-<pre id="prompt-5"><code>Прочитай CLAUDE.md, views/CLAUDE.md і .claude/rules/session-index.md.
-Нічого не змінюй. Поясни, які правила стосуються lib/claude/index.js,
-а які views/layout.js. Назви файл-джерело кожного правила.
-Відділи межі майбутнього S1 від загальних правил проєкту.
-Не стверджуй, що явне читання цих файлів доводить автоматичне завантаження
-інструкцій або технічну неможливість запису.</code></pre><button class="copy" data-copy="prompt-5" type="button">Копіювати промпт</button>
-<p><span class="label">Що має бути видно.</span> У відповіді є конкретні правила та файли, до яких вони належать. Цей явний запит на читання підходить і для іншого coding-агента. Він перевіряє розуміння змісту; нативне автоматичне завантаження саме цим запуском не перевірено.</p>
-<label class="check"><input type="checkbox" data-check="5">Познач після власної звірки правил, їхніх шляхів і пояснення агента.</label>
+<h2>5. Створи карту через survey</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Карта допомагає швидко знайти потрібний код. Її створить скіл; переписувати README у новий документ вручну не потрібно.</p>
+<pre id="block-20"><code>Це наявний навчальний застосунок. Після цього повідомлення
+я запущу survey у своєму агенті. Спершу підтвердь межі й зачекай.
+Карта має описувати поточний код, без реалізації нової фічі.
+Прочитай AGENTS.md, README.md та інструкції, на які вони вказують.
+Не читай examples/ чи особисті логи. Не змінюй код, тести й залежності.
+Дозволені docs/architecture-map.md та службові файли SDD за контрактом скіла.
+Наявні інструкції не переписуй. Якщо помітиш неточність, спочатку запропонуй правку.</code></pre><button class="copy" data-copy="block-20" type="button">Копіювати</button>
+<p>Після підтвердження запусти команду свого інструмента: Claude Code <code>/sdd:survey</code>; Codex зі скриптовим встановленням <code>$sdd-survey</code>; Cursor у меню <code>/</code> вибери <code>sdd-survey</code>.</p>
+<p>Дочекайся завершення. Survey може створити службові файли й коміт. Переглядай запропоновані дії: текстова заборона не позбавляє інструмент технічного права запису. Якщо карта вже є після попередньої спроби, не видаляй власні зміни навмання: вибери перевірку або оновлення за потреби.</p>
+<p><span class="label">Що має бути видно.</span> Є docs/architecture-map.md з описом поточного застосунку й посиланнями на код. Нову фічу не реалізовано.</p>
+<label class="check"><input type="checkbox" data-check="5">Познач, коли карта створена й відкривається в редакторі.</label>
 </article>
-
 <article class="step" id="step-6" data-step="6">
-<h2>6. Збери власний короткий контекст</h2>
-<p><span class="label">Що робити.</span> У редакторі відкрий <code>templates/02-context-pack.md</code>. Вибери <strong>File → Save As / Зберегти як</strong>: усередині <code>docs/</code> створи теку <code>practice/</code>, якщо її ще немає, і збережи копію як <code>02-context.md</code>. Початковий шаблон залиш без змін. Тепер власний запис лежить у <code>docs/practice/02-context.md</code>. Або попроси агента підготувати чернетку промптом нижче. Готові <code>CONTEXT.md</code> та <code>docs/architecture-map.md</code> використовуй як довідники й звіряй із кодом.</p>
-<p>Майбутня задача S1, <code>session-index</code>, має показати список сесій із метаданих файлів: ім’я, розмір і час зміни, від свіжих. JSON-відповідь і HTML-список ще належить реалізувати. Заголовки з вмісту, таймлайн і аналітика сюди не входять. Вкладені <code>subagents/</code> та <code>tool-results/</code> сесіями не вважаємо. Для порожньої, відсутньої або нечитабельної теки проєктів потрібен безпечний порожній стан. Це вимога до майбутнього читання диска; сьогодні такого читання ще немає.</p>
-<div class="table-wrap"><table><thead><tr><th>Рішення з docs/roadmap.md</th><th>Поточний вибір для S1</th></tr></thead><tbody>
-<tr><td>D1: що є сесією</td><td>Файл сесії на одному рівні під текою проєкту, без рекурсивного включення вкладених артефактів.</td></tr>
-<tr><td>D2: як показати проєкт</td><td>Похідний шлях із явною позначкою. Заміна кожного дефіса на слеш не відновлює оригінальний шлях однозначно.</td></tr>
-<tr><td>D3: скільки показувати</td><td>Параметр із розумним дефолтом, без пагінації. Конкретне число в цьому записі ще не визначено.</td></tr>
-</tbody></table></div>
-<p>У roadmap ці рядки мають поточні вибори. Запиши, які приймаєш для навчального зрізу. Питання став лише там, де справді бракує деталі або ти пропонуєш змінити вибір; не оголошуй усі D1–D3 наново невирішеними.</p>
-<pre id="prompt-6"><code>Підготуй лише docs/practice/02-context.md за templates/02-context-pack.md.
-Спочатку прочитай CLAUDE.md, views/CLAUDE.md, .claude/rules/session-index.md,
-CONTEXT.md, docs/architecture-map.md і docs/roadmap.md.
-Звір факти з server.js, lib/claude/index.js, lib/sources.js,
-views/layout.js і test/skeleton.test.js.
-Запиши мету майбутнього S1 session-index, що працює зараз, що ще лише заплановано,
-межі й поточні вибори D1–D3. Для фактів назви файл, функцію та актуальний рядок.
-Невідоме познач чесно. Не вигадуй результатів запуску або нових продуктових рішень.
-Не читай особисті логи. Не змінюй код, тести, package.json чи правила.
-Не реалізуй список сесій. Якщо файл уже є, запропонуй точкові правки без втрати моїх записів.</code></pre><button class="copy" data-copy="prompt-6" type="button">Копіювати промпт</button>
-<p><span class="label">Що має бути видно.</span> У власній нотатці окремо описані мета, поточний стан, план S1, правила, прийняті вибори й справжні невідомі. Додай реальний підсумок із кроку 2. Приклади в <code>docs/lesson-2/</code> можна читати як навчальне пояснення, не видаючи їхні результати за свої.</p>
-<label class="check"><input type="checkbox" data-check="6">Познач, коли власний файл створено й перечитано, факти мають джерела, а план не описано як готову поведінку.</label>
+<h2>6. Перевір карту за кодом</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Відкрий карту та файли, названі в запиті нижче. Нам потрібні перевірні твердження: які маршрути вже працюють, де формується HTML, як запускати тести.</p>
+<pre id="block-21"><code>Звір docs/architecture-map.md з server.js, lib/claude/index.js,
+lib/sources.js, views/layout.js, scripts/demo.mjs і test/skeleton.test.js.
+Спочатку прочитай джерела, потім порівняй твердження, далі запропонуй правки.
+Для кожного зауваження назви файл і функцію.
+Відділи поточний код від планів та коментарів.
+Нічого не змінюй без мого погодження. Особисті логи не відкривай.</code></pre><button class="copy" data-copy="block-21" type="button">Копіювати</button>
+<p>У <code>server.js</code> є прямий імпорт <code>claudeHome</code> з адаптера, хоча коментар <code>lib/sources.js</code> каже про відсутність таких імпортів. У <code>lib/claude/index.js</code> ще немає функції читання списку. Карта має описувати фактичний код.</p>
+<p>Для нечіткої відповіді попроси формат «твердження | стан | джерело». Без зразка це <strong>Zero-shot</strong>. Один приклад «GET / показує порожню сторінку | є зараз | server.js» дає <strong>One-shot</strong>. Додай «Список сесій | бажана зміна | README.md» і матимеш <strong>Few-shot</strong>. Джерела прикладів уже відкриті; це не перенавчання моделі.</p>
+<p>Поділ «прочитай → порівняй → запропонуй правки» називається декомпозицією. Chain-of-thought стосується проміжних кроків міркування. Тут ми звіряємо джерела й висновок; внутрішніх міркувань моделі не бачимо.</p>
+<p>Погодь лише підтверджені виправлення карти. Якщо помилки немає, вигадувати її для проходження не потрібно.</p>
+<p><span class="label">Що має бути видно.</span> Твердження карти підтверджуються кодом; заплановані можливості не описані як готові.</p>
+<label class="check"><input type="checkbox" data-check="6">Познач після власної перевірки й виправлення реальних неточностей.</label>
 </article>
-
 <article class="step" id="step-7" data-step="7">
-<h2>7. Дай агенту знайти неточності</h2>
-<p><span class="label">Що робити.</span> Передай агенту короткий запит на перевірку. Прочитай відповідь із відкритими файлами й виправ підтверджені неточності у своєму контексті. Поки працюємо з поясненням проєкту, без змін його поведінки.</p>
-<pre id="prompt-7"><code>Перевір docs/practice/02-context.md за поточним кодом і docs/roadmap.md.
-Працюй поетапно: прочитай джерела, порівняй твердження з кодом,
-після цього запропонуй точне формулювання.
-Для кожного сумнівного факту покажи цитату, файл і функцію, з якими звіряєш.
-Відділи те, що працює зараз, від вимог до майбутнього S1 session-index.
-Зверни увагу на прямий імпорт claudeHome у server.js та коментар у lib/sources.js.
-Назви лише справді невизначені деталі. Врахуй поточні вибори D1–D3;
-не повторюй уже закриті питання без конкретної суперечності.
-Не змінюй код, тести, залежності чи правила. Спочатку поверни зауваження до документа.</code></pre><button class="copy" data-copy="prompt-7" type="button">Копіювати промпт</button>
-<p><span class="label">Що має бути видно.</span> Конкретне зауваження можна перевірити в названому файлі. Якщо агент пише «список уже читається через реєстр», відкрий відповідні функції та виправ цю помилку в нотатці. Якщо зауважень немає, перевір названий обсяг; вигадувати дефект для виконання кроку не потрібно.</p>
-<p>Такий поділ на менші дії називають декомпозицією. Для цієї перевірки кроки залишаємо в одному запиті. У довшій роботі їх можна надсилати окремо й перевіряти результат перед продовженням. Chain-of-thought стосується проміжних кроків міркування; наша перевірка за файлами не демонструє внутрішніх міркувань моделі.</p>
-<label class="check"><input type="checkbox" data-check="7">Познач після звірки відповіді та виправлення підтверджених неточностей у контексті.</label>
+<h2>7. Знайди вкладені інструкції</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Відкрий <code>views/AGENTS.md</code>, <code>views/CLAUDE.md</code> і <code>views/layout.js</code>. Спеціальні HTML-правила лежать у вкладеній теці поруч із кодом. Короткий CLAUDE-файл імпортує той самий зміст через <code>@AGENTS.md</code>.</p>
+<pre id="block-22"><code>Готуємо майбутню зміну сторінки, але код зараз не пишемо.
+Прочитай views/layout.js та відповідні інструкції проєкту.
+Які готові функції треба використати для сторінки й текстових значень?
+Що потрібно зберегти в політиці безпеки HTML?
+Назви файл-джерело кожного правила. Якщо вкладені інструкції
+не потрапили в контекст, відкрий views/AGENTS.md явно й зазнач це.</code></pre><button class="copy" data-copy="block-22" type="button">Копіювати</button>
+<p><code>layout()</code> створює оболонку сторінки. <code>esc()</code> готує текстові значення для вставлення у HTML. Натомість параметр <code>body</code> уже очікує готовий HTML. Content-Security-Policy обмежує дозволені ресурси сторінки; її не послаблюємо без погодження.</p>
+<p>Claude Code завантажує вкладені інструкції при читанні відповідних файлів. Codex на початку збирає AGENTS від кореня до робочої теки: при запуску з кореня не припускай, що вкладений файл уже включений. Кореневий AGENTS тому прямо вимагає прочитати його перед роботою у views. Явне читання теж корисне; просто познач його чесно.</p>
+<p><span class="label">Що має бути видно.</span> У відповіді є layout(), esc(), CSP і views/AGENTS.md як джерело. Ти звіряєш це з поточним layout.js.</p>
+<label class="check"><input type="checkbox" data-check="7">Познач після перевірки змісту й способу читання.</label>
 </article>
-
 <article class="step" id="step-8" data-step="8">
-<h2>8. Залиш запис для наступної сесії</h2>
-<p><span class="label">Що робити.</span> Перш ніж завершувати поточну сесію, створи <code>docs/practice/handoff.md</code>. У редакторі вибери <strong>File → New File</strong>, запиши стан і збережи файл у вже створеній теці <code>docs/practice/</code> під назвою <code>handoff.md</code>. Це коротка передача роботи: де ми зупинилися, що читати та що робити далі. Пиши самостійно або скористайся запитом.</p>
-<pre id="prompt-8"><code>Підготуй docs/practice/handoff.md для наступної свіжої сесії.
-Вкажи: поточний стан скелета; docs/practice/02-context.md як основний контекст;
-файли правил і коду, які потрібно прочитати; прийняті рішення та їхні причини;
-реально виконані перевірки з фактичним результатом; що не перевірено;
-справді невідомі деталі; наступний крок без реалізації коду.
-Якщо в розмові немає результату команди, напиши «не зафіксовано».
-Не додавай секрети, особисті логи чи твердження, що S1 вже працює.
-Змінюй лише цей handoff; якщо він уже є, збережи мої записи.</code></pre><button class="copy" data-copy="prompt-8" type="button">Копіювати промпт</button>
-<details><summary>Короткий каркас запису, якщо пишеш вручну</summary><pre id="reference-handoff"><code># Передача роботи: session-index
-Зараз працює: ...
-Основний контекст: docs/practice/02-context.md
-Прочитати також: CLAUDE.md, views/CLAUDE.md, .claude/rules/session-index.md;
-server.js, lib/claude/index.js, lib/sources.js, views/layout.js,
-test/skeleton.test.js, docs/roadmap.md.
-Рішення та причини: ...
-Реальні перевірки: команда → фактичний результат або «не зафіксовано».
-Не перевірено: ...
-Невідоме: ...
-Далі: перевірити цей контекст свіжою сесією, код поки не змінювати.</code></pre></details>
-<p><span class="label">Що має бути видно.</span> Інша сесія знайде власний контекст, потрібні правила та чесний стан перевірок без переказу всієї розмови. Каркас вище й приклади лектора не містять результату твого запуску: заповни ці місця своїми даними.</p>
-<label class="check"><input type="checkbox" data-check="8">Познач після збереження й читання handoff, до переходу в нову сесію.</label>
+<h2>8. Перевір правила для даних</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Відкрий <code>docs/rules/session-data.md</code>. Тут єдина політика даних: навчальні фікстури, метадані замість текстів розмов, основні файли сесій і заборона запису застосунку в джерело.</p>
+<p>Поруч відкрий адаптер свого інструмента. Для Claude Code це <code>.claude/rules/session-index.md</code> з <code>paths: ["lib/claude/**/*.js"]</code> та імпортом <code>@../../docs/rules/session-data.md</code>. Для Cursor це <code>.cursor/rules/session-data.mdc</code> із тим самим <code>globs</code>, <code>alwaysApply: false</code> та посиланням <code>@docs/rules/session-data.md</code>.</p>
+<pre id="block-23"><code>Готуємо майбутній список сесій. Зараз нічого не реалізуй.
+Прочитай lib/claude/index.js і правила для даних, на які вказує AGENTS.md.
+Назви дозволене джерело даних, межі читання та записи, які слід пропустити.
+Поясни, як правило повʼязане з lib/claude/index.js і views/layout.js.
+Посилайся на docs/rules/session-data.md. Не стверджуй, що текст правила
+технічно забороняє доступ або вже доводить безпеку реалізації.</code></pre><button class="copy" data-copy="block-23" type="button">Копіювати</button>
+<p>Шаблон охоплює <code>lib/claude/index.js</code>, але не <code>views/layout.js</code>. Політика стосується будь-якої роботи з даними; шаблон лише допомагає інструменту підключити її у відповідному місці.</p>
+<p>У Claude scoped rule завантажується при читанні відповідного файла. У Cursor правило з globs додається, коли відповідний файл є в контексті. Codex не покладається на ці адаптери: кореневий AGENTS прямо посилається на політику. Якщо автоматичного включення не видно, прочитай файл явно й запиши це.</p>
+<p>Документація: <a href="https://code.claude.com/docs/en/memory">Claude Code</a>, <a href="https://developers.openai.com/codex/guides/agents-md">Codex AGENTS</a>, <a href="https://cursor.com/docs/context/rules">Cursor rules</a>. Текстові правила не замінюють технічних прав доступу.</p>
+<p><span class="label">Що має бути видно.</span> Агент називає канонічну політику та правильно пояснює джерело даних, межі й шаблон шляхів.</p>
+<label class="check"><input type="checkbox" data-check="8">Познач після власної звірки правил.</label>
 </article>
-
 <article class="step" id="step-9" data-step="9">
-<h2>9. Перевір контекст свіжою сесією</h2>
-<p><span class="label">Що робити.</span> Перевір, що handoff збережено. Усередині Claude Code введи <code>/exit</code>. Коли повернеться звичайний shell, у тій самій теці пакета знову введи <code>claude</code>. Не використовуй відновлення попередньої розмови через resume або continue. Це нова сесія; не передавай їй весь старий чат. Дай handoff та запит нижче. Перевіряємо зміст підготовлених файлів; автоматичне підвантаження інструкцій цим не тестуємо.</p>
-<pre id="prompt-9"><code>Прочитай docs/practice/handoff.md, docs/practice/02-context.md
-і згадані в них правила та файли коду. Історії попередньої роботи в тебе немає.
-Нічого не змінюй. Поясни своїми словами:
-1. Яка мета майбутнього session-index і що працює вже зараз?
-2. Що змінить S1, а що залишається поза його межами?
-3. У яких файлах і функціях видно поточну поведінку?
-4. Які правила стосуються адаптера, а які HTML-сторінки? Назви джерела.
-5. Які рішення вже обрано в D1–D3, а яких деталей справді бракує?
-Для кожного факту вкажи файл і актуальний рядок або функцію.
-Відокрем код, записаний намір і припущення. Не вигадуй відповіді чи результати тестів.
-Явне читання правил не називай доказом їх автоматичного завантаження.</code></pre><button class="copy" data-copy="prompt-9" type="button">Копіювати промпт</button>
-<p><span class="label">Що має бути видно.</span> Сесія пояснює мету, теперішній порожній стан, майбутній список, межі, правила та невідомі без домислів. Самостійно звір відповідь із кодом. Якщо щось прочитано неправильно, виправ контекст або handoff і повтори запит. Збережи фактичну відповідь чи її потрібні уривки у своєму контексті.</p>
-<p>Якщо нову сесію зараз не вдається відкрити, перечитай файли після паузи або попроси колегу. Це допоміжна перевірка, яку варто записати окремо. Крок 9 залиш незавершеним, доки не перевіриш відповідь нової сесії агента.</p>
-<label class="check"><input type="checkbox" data-check="9">Познач після фактичної перевірки відповіді нової сесії та потрібних правок у документах.</label>
+<h2>9. Перевір нову сесію</h2>
+<p><span class="label">Що робити.</span></p>
+<p>Збережи карту та заверши поточну розмову. Claude Code: введи <code>/exit</code>, потім <code>claude</code> у звичайному терміналі тієї самої теки без resume або continue. Codex: введи <code>/new</code>. Cursor: створи новий чат у тому самому проєкті, не переносячи стару розмову.</p>
+<pre id="block-24"><code>Це нова сесія в навчальному проєкті. Потрібно підготувати роботу
+над списком сесій і його сторінкою, але нічого не змінювати.
+Знайди наявні інструкції та карту проєкту.
+Поясни: що працює зараз, чого ще немає, що слід використати для HTML,
+які дані можна читати та чого не можна робити з джерелом.
+Назви файли й функції, які підтверджують відповідь.
+Окремо зазнач, що довелося прочитати явно і що залишилося неперевіреним.
+Не вигадуй результатів команд і не використовуй попередню розмову.</code></pre><button class="copy" data-copy="block-24" type="button">Копіювати</button>
+<p>Перевір, чи агент знайшов правильні файли та не приписав застосунку готовий список. Звір пояснення HTML і даних. Запиши нижче, які інструкції довелося відкрити явно. Правильна відповідь сама по собі не доводить автоматичного підключення.</p>
+<p>Якщо нову сесію ще не запускали, залиш крок 9 незавершеним. Допомога колеги або ручне читання корисні, але не замінюють цього запуску.</p>
+<p><span class="label">Що має бути видно.</span> Нова сесія відновлює контекст за файлами. Є конкретна відповідь, яку можна звірити з кодом і правилами.</p>
+<label class="check"><input type="checkbox" data-check="9">Познач тільки після фактичної перевірки нової сесії.</label>
 </article>
-
 <article class="step" id="step-10" data-step="10">
-<h2>10. Перевір, що залишилося після уроку</h2>
-<p><span class="label">Що робити.</span> Ще раз запусти перевірки та переглянь зміни. Порівняй реальний підсумок із початком роботи й допиши його у власний контекст. Нових runtime-файлів або змін тестів для завершення цього уроку не потрібно.</p>
-<pre id="command-10"><code>npm run verify
-git status --short
-git diff</code></pre><button class="copy" data-copy="command-10" type="button">Копіювати команди</button>
-<p>Звичайний <code>git diff</code> не показує вміст нових невідстежуваних файлів. Відкрий власні <code>docs/practice/02-context.md</code> і <code>docs/practice/handoff.md</code> у редакторі та перевір їх окремо. Якщо працюєш із ZIP без Git-історії, пропусти дві git-команди й скористайся порівнянням нижче.</p>
-<details><summary>Перевірити ZIP-копію без Git</summary><p>Розпакуй збережений початковий ZIP ще раз в окрему теку поза робочим пакетом. Це має бути та сама версія пакета, з якої починалася практика; нове завантаження могло вже змінитися. Початкову копію не редагуй. У ній також знайди корінь із <code>package.json</code>.</p><p>У терміналі своєї робочої копії виконай команду нижче. Заміни текст усередині лапок на повний шлях до кореня недоторканої копії: скористайся «Копіювати шлях» у файловому менеджері або перетягни теку в термінал. Перевір, що весь шлях із пробілами обрамлений однією парою подвійних лапок, без подвійного екранування.</p><pre id="command-compare"><code>node scripts/compare-kit.mjs "&lt;path to unpacked untouched kit&gt;"</code></pre><button class="copy" data-copy="command-compare" type="button">Копіювати команду порівняння</button><p>Команда нічого не змінює. Вона порівнює байти й показує всі <code>ADDED</code>, <code>CHANGED</code> та <code>REMOVED</code>, ігноруючи лише теки <code>node_modules</code>, <code>.git</code> та службові файли <code>.DS_Store</code>, <code>Thumbs.db</code>. Дати файлів не впливають на результат, правила в <code>.claude/</code> перевіряються. Символічні посилання або помилка читання зупиняють перевірку.</p><p>Після цього уроку очікуємо лише два <code>ADDED</code>: твої <code>docs/practice/02-context.md</code> і <code>docs/practice/handoff.md</code>. Це очікування; збережи власний фактичний список. Код завершення 1 означає знайдені відмінності, 0 означає їх відсутність, 2 означає помилку перевірки. Інші зміни спочатку розбери. Позначки вебчекліста не є результатом цього порівняння.</p></details>
-<p><span class="label">Що має бути видно.</span> У скелеті залишилися два наявні тести; вони проходять. Твої зміни стосуються лише запланованих документів. У нотатках є власний контекст, handoff і фактичний результат перевірки свіжою сесією. Якщо її ще не вдалося запустити, явно познач це: відповідна частина вправи ще не завершена. Секретів та особистих логів немає. Реалізація S1 почнеться пізніше, в уроках 3–4.</p>
-<p>Коміт необов’язковий. Якщо користуєшся Git і хочеш його зробити, спочатку переглянь та додай лише свої два файли; перевір підготовлений diff. Не додавай усі файли наосліп і не виконуй force-операцій.</p>
-<pre id="command-commit"><code>git add docs/practice/02-context.md docs/practice/handoff.md
-git diff --cached
-git commit -m "docs: prepare lesson 2 context and handoff"</code></pre><button class="copy" data-copy="command-commit" type="button">Копіювати необов’язкові команди Git</button>
-<label class="check"><input type="checkbox" data-check="10">Познач після повторного запуску, перегляду власних документів і збереження фактичних результатів.</label>
+<h2>10. Переглянь зміни й збережи результат</h2>
+<p><span class="label">Що робити.</span></p>
+<p>У звичайному терміналі повтори:</p>
+<pre id="block-25"><code>npm run verify</code></pre><button class="copy" data-copy="block-25" type="button">Копіювати</button>
+<p>У командах нижче заміни <code>BASE_COMMIT</code> своїм повним хешем із кроку 3:</p>
+<pre id="block-26"><code>git log --oneline BASE_COMMIT..HEAD
+git diff BASE_COMMIT HEAD
+git diff HEAD
+git status --short</code></pre><button class="copy" data-copy="block-26" type="button">Копіювати</button>
+<p>Команди показують коміти, закомічені й незакомічені зміни. Нові невідстежувані файли видно через status; відкрий їх окремо. Survey міг уже закомітити карту, тому порожній diff сам по собі не означає, що змін не було.</p>
+<p>Очікуємо карту й службові файли обраного встановлення SDD. Код, тести й залежності залишаються початковими. Уточнення готових інструкцій допустимі лише після твоєї перевірки та погодження; обовʼязкових правок заради вправи немає.</p>
+<p>Заповни поля під кроками: інструмент, фактичні запуски, перевірка нової сесії та неперевірене. Натисни <strong>Зберегти результат текстом</strong> до закриття сторінки. Поля не зберігаються автоматично, навіть якщо ввімкнено збереження позначок. Не вставляй секрети й приватні розмови.</p>
+<p>У проєкті потрібна лише карта від survey. Окремі interview, бриф, roadmap і handoff для другого уроку не створюємо.</p>
+<p><span class="label">Що має бути видно.</span> Два тести проходять, зміни зрозумілі, карта перевірена, власний результат нової сесії записано й експортовано.</p>
+<label class="check"><input type="checkbox" data-check="10">Познач після перевірки та збереження результату.</label>
 </article>
-
-<section aria-labelledby="troubleshooting">
-<h2 id="troubleshooting">Якщо щось зупинило роботу</h2>
-<div class="table-wrap"><table><thead><tr><th>Що бачиш</th><th>Що спробувати</th></tr></thead><tbody>
-<tr><td>Немає доступу до пакета, GitHub показує 404</td><td>Перевір акаунт і запрошення. Попроси команду курсу надати доступ до цього приватного пакета. Сама публічна сторінка доступу не надає.</td></tr>
-<tr><td>Команди node або npm не знайдено</td><td>Встанови Node.js 22 або 24, відкрий новий термінал і повтори перевірку версій. Це підготовка середовища, не помилка контексту.</td></tr>
-<tr><td>npm ci завершується помилкою мережі або довго не відповідає</td><td>Перевір з’єднання й доступ до реєстру пакетів. Збережи текст помилки, припини завислий запуск через Ctrl+C і повтори після усунення причини. Не вимикай перевірку сертифікатів.</td></tr>
-<tr><td>Сторінка не відкривається або порт зайнятий</td><td>Подивися на термінал demo. Якщо порт 4180 зайнятий твоїм попереднім запуском, повернися до нього або зупини його через Ctrl+C. Не завершуй чужі процеси навмання.</td></tr>
-<tr><td>Замість двох тестів запускається інший набір</td><td>Перевір поточну теку та версію пакета. Збережи реальний вивід і з’ясуй різницю; не переписуй підсумок під очікуване число.</td></tr>
-<tr><td>Агент не бачить файлів, не відповідає або закінчився доступ</td><td>Перевір, що відкрито ту саму теку. Можеш передати лише потрібні безпечні уривки з пакета. Якщо продовжуєш вручну або з колегою, назви цей спосіб у нотатці; не став вигаданий результат агента.</td></tr>
-<tr><td>Немає views/CLAUDE.md або .claude/rules/session-index.md</td><td>Перевір, чи це актуальна копія того самого пакета. Попроси оновлені матеріали. Не шукай потрібне правило в іншому навчальному репозиторії.</td></tr>
-<tr><td>Браузер не зберігає позначки чи не копіює промпт</td><td>Продовжуй у поточній вкладці. Збережи чекліст текстом перед закриттям. Для промпту виділи його текст і скопіюй звичайним способом.</td></tr>
-</tbody></table></div>
+<section id="evidence" class="step" aria-labelledby="evidence-title">
+<p id="completion" role="status" hidden></p>
+<h2 id="evidence-title">Твій результат перевірки</h2>
+<p>Запиши коротко, що реально відбулося. Кожне поле вміщує до 3000 символів. Ці записи залишаються лише у відкритій вкладці до експорту; збереження позначок їх не зберігає. Не вставляй секрети або приватні розмови.</p>
+<label for="evidence-agent">Інструмент і версія</label><textarea id="evidence-agent" data-evidence="agent" maxlength="3000" placeholder="Назва агента, версія, спосіб встановлення SDD"></textarea>
+<label for="evidence-checks">Команди й фактичний результат</label><textarea id="evidence-checks" data-evidence="checks" maxlength="3000" placeholder="Початковий хеш; npm run verify; що показали demo та Git"></textarea>
+<label for="evidence-fresh">Що показала нова сесія</label><textarea id="evidence-fresh" data-evidence="fresh" maxlength="3000" placeholder="Які висновки звірено з файлами; що агент прочитав явно; реальна неточність і виправлення, якщо були"></textarea>
+<label for="evidence-limits">Що залишилося неперевіреним</label><textarea id="evidence-limits" data-evidence="limits" maxlength="3000" placeholder="Наприклад: автоматичне завантаження не підтверджено; інший агент не запускався"></textarea>
+<p>Натисни «Зберегти результат текстом» угорі сторінки. Експорт містить твої записи й позначки, але сам по собі не засвідчує виконання команд.</p>
 </section>
-<p id="completion" hidden></p>
 <p class="foot">Цю сторінку можна зберегти як <code>context-check.html</code> і відкрити локально. Їй не потрібні сервер чи інтернет для читання, позначок і експорту. Доступ до пакета, встановлення залежностей та розмова з агентом мають власні вимоги й виконуються окремо. Не розраховуй на перенесення збережених позначок між браузерами, пристроями або локальною й вебкопією сторінки.</p>
 </main>
 <script id="context-engine">
 'use strict';
 globalThis.ContextCheck=(()=>{
-  const VERSION='context-check-v1',KEY='ai-work-check:context-check-v1';
-  const TITLES=['Відкрий навчальний пакет','Подивися на перевірки до змін','Відкрий те, що працює зараз','Звір пояснення з кодом','Прочитай правила там, де вони потрібні','Збери власний короткий контекст','Дай агенту знайти неточності','Залиш запис для наступної сесії','Перевір контекст свіжою сесією','Перевір, що залишилося після уроку'];
+  const VERSION='context-check-v3-curated',KEY='ai-work-check:context-check-v3-curated';
+  const TITLES=["Завантаж і відкрий проєкт","Перевір і запусти застосунок","Підготуй Git, агента й SDD","Прочитай основні інструкції","Створи карту через survey","Перевір карту за кодом","Знайди вкладені інструкції","Перевір правила для даних","Перевір нову сесію","Переглянь зміни й збережи результат"];
   const empty=()=>Array(10).fill(false);
   const valid=checked=>Array.isArray(checked)&&checked.length===10&&checked.every(value=>typeof value==='boolean');
   function parse(raw){
@@ -278,12 +260,17 @@ globalThis.ContextCheck=(()=>{
     function reset(confirmReset){if(!confirmReset())return {reset:false,...snapshot()};checked=empty();remember=false;remove();return {reset:true,...snapshot()};}
     return {load,update,setRemember,reset,snapshot};
   }
-  function markdown(checked,date=new Date().toISOString()){
+  function markdown(checked,date=new Date().toISOString(),evidence={}){
     if(!valid(checked))throw Error('invalid checkbox state');
+    const fields=['agent','checks','fresh','limits'];
+    if(!evidence||typeof evidence!=='object'||Array.isArray(evidence)||Object.keys(evidence).some(key=>!fields.includes(key))||fields.some(key=>evidence[key]!==undefined&&(typeof evidence[key]!=='string'||evidence[key].length>3000)))throw Error('invalid evidence');
     if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(date)||!Number.isFinite(Date.parse(date))||new Date(date).toISOString()!==date)throw Error('invalid date');
-    const lines=['# Урок 2: чекліст проходження','','Дата експорту: '+date,'Версія сторінки: '+VERSION,'Позначено: '+checked.filter(Boolean).length+' із 10','','Це мої позначки проходження, не підтвердження виконання команд або якості коду.','Сторінка не читала мої файли й не перевіряла розмову з агентом.','Фактичні результати зберігаю окремо в docs/practice/02-context.md і docs/practice/handoff.md.',''];
+    const lines=['# Урок 2: чекліст проходження','','Дата експорту: '+date,'Версія сторінки: '+VERSION,'Позначено: '+checked.filter(Boolean).length+' із 10','','Це мої позначки проходження, не підтвердження виконання команд або якості коду.','Сторінка не читала мої файли й не перевіряла розмову з агентом.','Основний документ уроку: docs/architecture-map.md. Фактичні результати нижче записані мною, без автоматичної перевірки.',''];
     TITLES.forEach((title,i)=>lines.push('- ['+(checked[i]?'x':' ')+'] '+(i+1)+'. '+title));
-    lines.push('','Ручне читання чи допомога колеги є допоміжною перевіркою. Крок 9 залишається незавершеним до фактичної звірки відповіді нової сесії агента.','');return lines.join('\n');
+    lines.push('','## Власні результати','');
+    const labels=['Інструмент і версія','Команди й фактичний результат','Що показала нова сесія','Що залишилося неперевіреним'];
+    fields.forEach((key,i)=>lines.push('### '+labels[i],'',evidence[key]?.trim()||'Не зафіксовано.',''));
+    lines.push('Крок 9 лишається незавершеним без фактичного запуску нової сесії. Явне читання файлів не доводить автоматичного завантаження правил.','');return lines.join('\n');
   }
   return {VERSION,KEY,TITLES,parse,createProgress,markdown};
 })();
@@ -293,16 +280,17 @@ globalThis.ContextCheck=(()=>{
 (()=>{
   const C=globalThis.ContextCheck,byId=id=>document.getElementById(id),state=C.createProgress(()=>window.localStorage);
   const checks=[...document.querySelectorAll('[data-check]')];
+  const evidenceFields=[...document.querySelectorAll('[data-evidence]')];
   function render(value){
     checks.forEach((input,i)=>{input.checked=value.checked[i];byId('step-'+(i+1)).classList.toggle('done',value.checked[i]);});
     byId('remember').checked=value.remember;byId('progress').value=value.count;byId('progress-text').textContent='Позначено: '+value.count+' із 10';
     byId('storage-status').textContent=value.warning||(value.remember?'Зберігаються лише десять позначок у цьому браузері. Текст документів і результати команд сюди не потрапляють.':'Без автоматичного збереження. Можна завантажити чекліст перед закриттям сторінки.');
-    byId('completion').hidden=value.count!==10;byId('completion').textContent='Усі десять кроків позначено. Перевір, що власний контекст, handoff і фактичні результати збережені у твоїй копії пакета. Ці позначки самі по собі не доводять виконання перевірок.';
+    byId('completion').hidden=value.count!==10;byId('completion').textContent='Усі десять кроків позначено. Перевір карту й експортуй власні результати нової сесії. Позначки самі по собі не доводять виконання перевірок.';
   }
   checks.forEach((input,i)=>input.addEventListener('change',()=>render(state.update(i,input.checked))));
   byId('remember').addEventListener('change',event=>render(state.setRemember(event.target.checked)));
-  byId('reset').addEventListener('click',()=>render(state.reset(()=>window.confirm('Скинути всі десять позначок і прибрати їхнє збереження в цьому браузері? Файли твого проєкту залишаться без змін.'))));
-  byId('download').addEventListener('click',()=>{const text=C.markdown(state.snapshot().checked),url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='lesson-2-checklist.md';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  byId('reset').addEventListener('click',()=>{const result=state.reset(()=>window.confirm('Скинути позначки та записи в полях і прибрати збереження позначок? Файли проєкту й завантажені результати залишаться без змін.'));if(result.reset)evidenceFields.forEach(field=>{field.value='';});render(result);});
+  byId('download').addEventListener('click',()=>{const evidence=Object.fromEntries(evidenceFields.map(field=>[field.dataset.evidence,field.value]));const text=C.markdown(state.snapshot().checked,new Date().toISOString(),evidence),url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='lesson-2-context-result.md';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   for(const button of document.querySelectorAll('[data-copy]'))button.addEventListener('click',async()=>{
     const block=byId(button.dataset.copy);
     try{if(!navigator.clipboard?.writeText)throw Error('clipboard unavailable');await navigator.clipboard.writeText(block.textContent);byId('copy-status').textContent='Текст скопійовано. Перед виконанням перевір потрібну теку або сесію.';}

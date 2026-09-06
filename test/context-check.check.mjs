@@ -1,5 +1,5 @@
-// Standalone materials checks: node --test test/context-check.check.js
-// Not named *.test.js: npm run verify remains the two-test runtime baseline.
+// Public standalone checklist tests: node --test test/context-check.check.mjs
+// Private code and rule contracts are checked separately in the course kit.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -115,7 +115,7 @@ test('Markdown supports partial and complete progress without verified-proof cla
   const partial=C.markdown(checked,'2026-09-06T12:00:00.000Z');assert.match(partial,/Позначено: 1 із 10/);
   assert.equal([...partial.matchAll(/^- \[x\]/gm)].length,1);assert.equal([...partial.matchAll(/^- \[ \]/gm)].length,9);
   const complete=C.markdown(all(true));assert.equal([...complete.matchAll(/^- \[x\]/gm)].length,10);
-  for(const text of [partial,complete]){assert.match(text,/не підтвердження виконання команд або якості коду/);assert.match(text,/Фактичні результати зберігаю окремо/);assert.doesNotMatch(text,/PASS|APPROVED|NaN|score|балів/);}
+  for(const text of [partial,complete]){assert.match(text,/не підтвердження виконання команд або якості коду/);assert.match(text,/Фактичні результати нижче записані мною/);assert.doesNotMatch(text,/PASS|APPROVED|NaN|score|балів/);}
   assert.throws(()=>C.markdown([true]));assert.throws(()=>C.markdown(all(true),'<img src=x>'));
 });
 
@@ -125,27 +125,61 @@ test('safe rendering and copy fallback use text, not HTML injection',()=>{
   assert.match(html,/window\.confirm\(/);assert.match(html,/Браузер не дозволив автоматичне копіювання/);
 });
 
-test('page has no uploads, contact fields, external assets, network calls or dependencies',()=>{
+test('page has no uploads, external assets or network calls',()=>{
   assert.doesNotMatch(html,/<script[^>]+src=|<link[^>]+href=|<iframe|type="(?:file|email|tel)"|\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket/);
-  assert.match(html,/connect-src 'none'/);
-  const links=[...html.matchAll(/href="([^"]+)"/g)].map(x=>x[1]);
-  assert.deepEqual(links,['https://github.com/genkovich/agentic-engineering-mini-kit','https://code.visualstudio.com/download','https://nodejs.org/en/download','https://code.claude.com/docs/en/quickstart','https://code.claude.com/docs/en/troubleshoot-install','https://code.claude.com/docs/en/memory']);
+  assert.ok(html.includes("connect-src 'none'"));
+  for(const [,href] of html.matchAll(/href="([^"]+)"/g))assert.match(href,/^https:\/\//);
 });
 
-test('all copy controls target an inline block, with handoff before fresh session',()=>{
+test('new semantic version never restores old exercise checkmarks',()=>{
+  assert.equal(C.VERSION,'context-check-v3-curated');
+  const storage=memory({'ai-work-check:context-check-v1':JSON.stringify({version:'context-check-v1',checked:all(true)})});
+  assert.equal(C.createProgress(()=>storage).load().count,0);
+  assert.ok(storage.values.has('ai-work-check:context-check-v1'));
+  assert.match(html,/старі позначки попередньої вправи не переносяться/);
+});
+
+test('all copy controls and evidence fields have real unique DOM targets',()=>{
+  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);
+  assert.equal(ids.length,new Set(ids).size);
   for(const [,target]of html.matchAll(/data-copy="([^"]+)"/g))assert.ok(html.includes('<pre id="'+target+'">'));
-  assert.ok(html.indexOf('id="prompt-8"')<html.indexOf('id="prompt-9"'));
-  for(const command of ['npm ci','npm run verify','npm run demo','git status --short','git diff','git diff --cached'])assert.ok(html.includes(command));
-  assert.match(html,/SDD й плагіни зараз не потрібні/);
+  for(const id of ['completion','evidence','evidence-agent','evidence-checks','evidence-fresh','evidence-limits','remember','progress','progress-text','storage-status','copy-status','download','reset'])assert.ok(ids.includes(id),id);
+  const exported=C.markdown(all(false),'2026-09-06T12:00:00.000Z',{agent:'Codex',checks:'tests 2',fresh:'Явно прочитано views/AGENTS.md',limits:'Автозавантаження не перевірено'});
+  for(const text of ['Codex','tests 2','Явно прочитано views/AGENTS.md','Автозавантаження не перевірено'])assert.ok(exported.includes(text));
+  assert.throws(()=>C.markdown(all(false),undefined,{agent:'x'.repeat(3001)}));
+  assert.throws(()=>C.markdown(all(false),undefined,{other:'x'}));
+  assert.throws(()=>C.markdown(all(false),undefined,{fresh:42}));
+  assert.ok(html.includes("if(result.reset)evidenceFields.forEach"));
+  assert.ok(html.includes("field.value=''"));
 });
 
-test('manual review does not mark the fresh-agent step complete',()=>{
-  assert.match(html,/Крок 9 залиш незавершеним/);
-  assert.match(C.markdown(all(false)),/Крок 9 залишається незавершеним/);
-  assert.doesNotMatch(html,/Якщо використано альтернативний спосіб/);
+
+test('public setup covers one selected host and a real Git baseline',()=>{
+  for(const value of ['git clone https://github.com/genkovich/agentic-engineering-mini-kit.git','Code → Download ZIP','File → Open Folder','Terminal → New Terminal','node --version','git init','git rev-parse --show-toplevel','git config user.name','git config user.email','git rev-parse HEAD','npm ci','npm run verify','npm run demo'])assert.ok(html.includes(value),value);
+  for(const value of ['/sdd:survey','$sdd-survey','bash -s -- codex','bash -s -- cursor','/reload-plugins'])assert.ok(html.includes(value),value);
+  assert.doesNotMatch(html,/\/sdd:interview|\/init/);
 });
 
+test('public lesson names one canonical policy and short adapters without exposing private code',()=>{
+  for(const value of ['AGENTS.md','views/AGENTS.md','docs/rules/session-data.md','.claude/rules/session-index.md','.cursor/rules/session-data.mdc','@../../docs/rules/session-data.md','@docs/rules/session-data.md','lib/claude/**/*.js'])assert.ok(html.includes(value),value);
+  assert.ok(html.includes('docs/architecture-map.md'));
+  assert.doesNotMatch(html,/docs\/idea-brief\.md|docs\/practice\/handoff\.md|02-context\.md/);
+});
 
-test('follow-along has concrete setup, fresh session and ZIP comparison',()=>{
-  for(const text of ['Download ZIP','Open Folder','New Terminal','node --version','claude --version','claude.ai/install.sh','claude.ai/install.ps1','/exit','scripts/compare-kit.mjs','ADDED','CHANGED','REMOVED'])assert.ok(html.includes(text),text);
+test('fresh session explicitly distinguishes reading from automatic loading',()=>{
+  for(const value of ['/exit','/new','resume або continue','новий чат','залиш крок 9 незавершеним','що довелося прочитати явно'])assert.ok(html.includes(value),value);
+  assert.ok(C.markdown(all(false)).includes('Крок 9 лишається незавершеним'));
+  assert.ok(C.markdown(all(false)).includes('Явне читання файлів не доводить автоматичного завантаження'));
+});
+
+test('evidence remains ephemeral while export includes learner-entered results',()=>{
+  assert.equal([...html.matchAll(/data-evidence=/g)].length,4);
+  assert.ok(html.includes('Поля не зберігаються автоматично'));
+  assert.ok(html.includes('Object.fromEntries(evidenceFields.map'));
+  assert.ok(html.includes("link.download='lesson-2-context-result.md'"));
+  const text=C.markdown(all(false),'2026-09-06T12:00:00.000Z',{agent:'Cursor',checks:'2 tests passed',fresh:'Вкладений файл прочитано явно',limits:'Claude не запускався'});
+  for(const value of ['Cursor','2 tests passed','Вкладений файл прочитано явно','Claude не запускався'])assert.ok(text.includes(value));
+  assert.equal([...html.matchAll(/maxlength="3000"/g)].length,4);
+  const storage=memory(),state=C.createProgress(()=>storage);state.setRemember(true);
+  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(C.KEY))).sort(),['checked','version']);
 });
