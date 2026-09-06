@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="uk" data-mode="start">
+<html lang="uk" data-mode="final">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Стартова анкета мінікурсу: 10 запитань про практики роботи з AI по ланцюгу курсу. Результат показує найслабший стик і урок, з якого починати.">
+<meta name="description" content="Фінальна анкета мінікурсу: 35 запитань про практики основної програми Agentic Engineering по пʼяти стиках ланцюга. Результат показує найслабший стик і модулі, які його закривають.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="color-scheme" content="dark">
-<title>Як я працюю з AI: 10 простих запитань</title>
+<title>Як я працюю з AI після мінікурсу: 35 запитань</title>
 <style>
 :root{color-scheme:dark;
   --bg-deep:#121430;--bg-panel:#1E2148;--bg-elev:#262A55;
@@ -177,9 +177,9 @@ noscript a{color:var(--cyan)}
 <body>
 <main>
 <header>
-<div class="eyebrow">Мінікурс · урок 1 · стартова анкета</div>
-<h1>Як я працюю з AI: <span class="hl">10 простих запитань</span></h1>
-<p class="intro">Десять запитань ідуть по ланцюгу курсу, по два на кожен стик між етапами роботи з агентом. Кожне про конкретну практику, якої курс і вчить, тому низький результат на старті очікуваний. Результат покаже, який стик просідає найбільше і з якого уроку його підтягувати.</p>
+<div class="eyebrow">Мінікурс · урок 6 · фінальна анкета</div>
+<h1>Як я працюю з AI після мінікурсу: <span class="hl">35 запитань</span></h1>
+<p class="intro">Тридцять пʼять запитань про практики основної програми Agentic Engineering, по сім на кожен стик ланцюга. Результат покаже, які стики тримаються після мінікурсу і які модулі основної програми закривають решту.</p>
 <div class="chain-wrap">
 <svg class="chain-line" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><line class="h" x1="0" y1="50" x2="100" y2="50" pathLength="1"/><line class="v" x1="50" y1="0" x2="50" y2="100" pathLength="1"/></svg>
 <ol class="chain" id="chain" aria-label="Ланцюг курсу: пʼять стиків і уроки"></ol>
@@ -191,7 +191,7 @@ noscript a{color:var(--cyan)}
 </header>
 <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-label="Кількість відповідей"><div class="progress-row"><span id="progress-text" aria-live="polite">Відповідей: 0</span><span class="mono" id="progress-count">0</span></div><div class="bar"><div class="bar-fill" id="bar"></div></div></div>
 <div id="questions"></div>
-<noscript><p>Щоб заповнити анкету тут, увімкни JavaScript у браузері. Або скористайся <a href="https://github.com/genkovich/ai-work-check/blob/main/questionnaire.md">текстовою версією</a>.</p></noscript>
+<noscript><p>Щоб заповнити анкету тут, увімкни JavaScript у браузері. Або скористайся <a href="https://github.com/genkovich/ai-work-check/blob/main/final-questionnaire.md">текстовою версією</a>.</p></noscript>
 <section id="results" hidden aria-labelledby="result-title">
 <h2 id="result-title">Твій результат</h2>
 <p class="score"><span id="score-num">0</span><span id="score-max" class="score-max"></span></p>
@@ -201,7 +201,7 @@ noscript a{color:var(--cyan)}
 <div class="panel next-panel"><p class="panel-cap">Перша звичка по ланцюгу</p><p id="next-step"></p></div>
 <div class="table-wrap"><table id="group-table"><caption>Пʼять стиків</caption><thead><tr><th scope="col">Стик</th><th scope="col">Ланки</th><th scope="col">Урок</th><th scope="col">Бали</th><th scope="col">Поза підрахунком</th></tr></thead><tbody></tbody></table></div>
 <div class="table-wrap final-only"><table id="module-table"><caption>Де це в основній програмі</caption><thead><tr><th scope="col">Модуль</th><th scope="col">Запитань</th><th scope="col">Бали</th><th scope="col">Поза підрахунком</th></tr></thead><tbody></tbody></table></div>
-<!-- cta -->
+<div class="panel cta final-only" id="cta"><p class="panel-cap">Найслабші модулі</p><p id="cta-text"></p><p><a class="cta-link" href="https://agenticengineering.it.com/" rel="noopener">Залишити анкету</a></p></div>
 <div class="table-wrap"><table id="question-table"><caption>Відповіді на всі запитання</caption><thead><tr><th scope="col">№</th><th scope="col">Запитання</th><th scope="col" class="final-only">Модуль</th><th scope="col">Відповідь</th><th scope="col">Бали</th></tr></thead><tbody></tbody></table></div>
 <div class="toolbar"><button id="download-md" class="primary" type="button" disabled>Завантажити Markdown</button><button id="download-json" type="button" disabled>Завантажити result.json</button></div>
 <p class="foot start-only">Результат описує звички. Рівнів і прохідного бала тут нема. Низький результат на старті очікуваний: запитання про практики, яких курс і вчить. Наприкінці курсу є <a href="final.html">фінальна анкета на 35 запитань</a>. Збережи result.json або Markdown: на фінальній анкеті зручно покласти його поруч і порівняти стики.</p>
