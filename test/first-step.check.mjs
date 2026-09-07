@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {createHash} from 'node:crypto';
 
 const html = fs.readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const finalHtml = fs.readFileSync(new URL('../final.html', import.meta.url), 'utf8');
@@ -56,8 +57,8 @@ test('final.html is index.html in final mode: same engine and UI byte for byte, 
   assert.match(html, /<html lang="uk" data-mode="start">/); assert.match(finalHtml, /<html lang="uk" data-mode="final">/);
   assert.match(finalHtml, /<title>Як я працюю з AI після мінікурсу: 35 запитань<\/title>/);
   assert.match(finalHtml, /Мінікурс · урок 6 · фінальна анкета/);
-  assert.match(finalHtml, /href="https:\/\/agenticengineering\.it\.com\/"[^>]*>Залишити анкету</);
-  assert.match(finalHtml, /Для завершення мінікурсу заповнювати анкету не треба/);
+  assert.match(finalHtml, /href="https:\/\/agenticengineering\.it\.com\/"[^>]*>Подати заявку на консультацію</);
+  assert.match(finalHtml, /для завершення мінікурсу заявку подавати не потрібно/i);
   assert.doesNotMatch(html, /agenticengineering\.it\.com|Залишити анкету|Основна програма/);
   assert.match(html, /<!-- cta -->/); assert.doesNotMatch(finalHtml, /<!-- cta -->/);
   assert.match(finalHtml, /final-questionnaire\.md/); assert.doesNotMatch(html, /final-questionnaire\.md/);
@@ -65,7 +66,7 @@ test('final.html is index.html in final mode: same engine and UI byte for byte, 
   assert.match(html, /html\[data-mode="final"\] \.start-only,html\[data-mode="start"\] \.final-only\{display:none!important\}/);
 });
 
-test('five levels 0..4 plus a separate no-experience mark; start is v3, final is final-v1', () => {
+test('five levels 0..4 plus a separate no-experience mark; start is v3, final is final-v2', () => {
   for (const X of [A, F]) {
     assert.deepEqual(clean(X.LEVELS.map(l => l.value)), [0,1,2,3,4]);
     assert.deepEqual(clean(X.LEVELS.map(l => l.label)), ['Ніколи','Рідко','У половині випадків','Майже завжди','Завжди']);
@@ -73,7 +74,7 @@ test('five levels 0..4 plus a separate no-experience mark; start is v3, final is
     assert.equal(X.answerLabel(2), '2 · У половині випадків'); assert.equal(X.answerLabel('none'), X.NONE_LABEL);
     assert.equal(X.STRONG_SHARE, 0.75); assert.equal(X.WEAK_SHARE, 0.5);
   }
-  assert.equal(A.VERSION, 'mini-audit-v3'); assert.equal(F.VERSION, 'mini-audit-final-v1');
+  assert.equal(A.VERSION, 'mini-audit-v3'); assert.equal(F.VERSION, 'mini-audit-final-v2');
   assert.equal(M.SETS.start.version, A.VERSION); assert.equal(M.SETS.final.version, F.VERSION);
   for (const md of [fallback, finalFallback]) for (const l of A.LEVELS) assert.ok(md.includes('**'+l.value+': '+l.label+'**'), 'level '+l.value+' in md');
   assert.throws(() => M.create('other')); assert.throws(() => M.create('constructor'));
@@ -189,7 +190,7 @@ test('first habit: earliest question with the lowest level; all 4 = habits in pl
 });
 
 test('export carries version and mode, keeps the v1-shaped result, survives a JSON round trip and rejects the other mode', () => {
-  for (const [X, version] of [[A, 'mini-audit-v3'], [F, 'mini-audit-final-v1']]) {
+  for (const [X, version] of [[A, 'mini-audit-v3'], [F, 'mini-audit-final-v2']]) {
     const data = exported(X, 3);
     assert.equal(data.version, version); assert.equal(data.mode, X.mode); assert.equal(data.date, DATE);
     assert.deepEqual(Object.keys(data), ['version','mode','date','answers','result']);
@@ -239,7 +240,7 @@ test('final Markdown adds the seam summary between the weakest seam and the firs
   const a = answers(F, 4); for (let i = 22; i <= 28; i++) a['q'+i] = 1; a.q17 = 'none'; a.q5 = 2;
   const md = F.markdown(F.makeExport(a, DATE));
   assert.match(md, /^# Як я працюю з AI після мінікурсу: 35 запитань\n/);
-  assert.match(md, /Версія: mini-audit-final-v1/); assert.match(md, /Бали: 113 \/ 136/); assert.match(md, /Поза підрахунком: 1 із 35/);
+  assert.match(md, /Версія: mini-audit-final-v2/); assert.match(md, /Бали: 113 \/ 136/); assert.match(md, /Поза підрахунком: 1 із 35/);
   assert.match(md, /## Найслабший стик\n\nПеревірка результату \(Verification\), 7 з 28\. У мінікурсі це урок 5\. [^\n]+\n\n## Сильні й слабкі стики\n\nСильні: Зрозуміла задача \(26 з 28\), Потрібна інформація \(28 з 28\), Робота по кроках \(24 з 24\), Корисні висновки \(28 з 28\)\. Слабкі: Перевірка результату \(7 з 28\)\.\n\n## Перша звичка по ланцюгу\n\n/);
   assert.match(md, /## Пʼять стиків\n\n\| Стик \| Ланки \| Урок \| Бали \| Поза підрахунком \|/);
   assert.match(md, /## Відповіді\n\n\| № \| Запитання \| Відповідь \| Бали \|\n\|---\|---\|---\|---\|\n/);
@@ -286,14 +287,38 @@ test('page copy: chain intro, shopping-list example before questions on start, s
   assert.match(html, /фінальна анкета на 35 запитань/);
   assert.match(html, /<div class="panel example start-only">/);
   assert.match(html, /<div class="panel seams-panel final-only"><p class="panel-cap">Сильні й слабкі стики<\/p><p id="seams"><\/p><\/div>/);
-  for (const page of [html, finalHtml]) assert.doesNotMatch(page, /[Іі]мпорт|попередній результат|Codex|A\/B\/C\/D|Так, зазвичай|Де це в основній програмі|Найслабші модулі|тег модуля|\bM1\b|M11/);
-  assert.match(finalHtml, /складніших за стартові/);
+  for (const page of [html, finalHtml]) assert.doesNotMatch(page, /[Іі]мпорт|попередній результат|A\/B\/C\/D|Так, зазвичай|Де це в основній програмі|Найслабші модулі|тег модуля|\bM1\b|M11/);
+  assert.match(finalHtml, /необовʼязковий огляд тем/);
   assert.match(finalHtml, /<div class="panel cta final-only" id="cta"><p class="panel-cap">Що далі<\/p>/);
   assert.match(fallback, /Download ZIP/); assert.ok(/genkovich\.github\.io\/ai-work-check|\.\.\/first-step\.html/.test(fallback));
   assert.match(fallback, /## Як читати результат/); assert.match(fallback, /низький результат на старті очікуваний/);
   assert.ok(/final\.html|\.\.\/final-step\.html/.test(fallback));
   assert.match(finalFallback, /Download ZIP/); assert.ok(/genkovich\.github\.io\/ai-work-check\/final\.html|\.\.\/final-step\.html/.test(finalFallback));
-  assert.match(finalFallback, /## Як читати результат/); assert.match(finalFallback, /Сильні й слабкі стики/); assert.match(finalFallback, /складніших за стартові/);
+  assert.match(finalFallback, /## Як читати результат/); assert.match(finalFallback, /Сильні й слабкі стики/); assert.match(finalFallback, /необовʼязковий огляд тем/);
   assert.match(finalFallback, /agenticengineering\.it\.com/); assert.doesNotMatch(finalFallback, /Молоко|Куплено|\bM\d{1,2}\b|Де це в основній програмі|Найслабші модулі|таблиц[яі] модулів|\| Модуль \||основн(а|ої) програми біля/i);
   for (const md of [fallback, finalFallback]) { assert.doesNotMatch(md, /імпортуй|[Іі]мпорту? |A\/B\/C\/D|Так, зазвичай|[—–…]/); assert.doesNotMatch(md, /\bне [^,]{1,40}, а /); }
+});
+
+test('FINAL35 v2 is an optional topic inventory, not a progress metric or a mandate to add tools', () => {
+  assert.equal(createHash('sha256').update(JSON.stringify(M.SETS.start)).digest('hex'), '8a942e401ababd09f7b566bfce84c682a29f06a0ee170920c73f84bdcf349058', 'START10 remains byte-stable as data');
+  const q = number => F.QUESTIONS[number - 1].text + ' ' + F.QUESTIONS[number - 1].hint + ' ' + F.QUESTIONS[number - 1].next;
+  assert.match(q(7), /SAD/); assert.match(q(7), /OpenAPI потрібен не завжди/);
+  for (const tool of ['AGENTS.md', 'CLAUDE.md', 'Cursor']) assert.ok(q(8).includes(tool));
+  assert.match(q(12), /MCP є одним зі способів/);
+  assert.match(q(19), /послідовно/); assert.match(q(21), /послідовну роботу/);
+  assert.match(q(20), /не гарантує зупинки/);
+  assert.match(q(23), /наявність CI сама цього не гарантує/);
+  assert.match(q(29), /достатньо короткого шаблону/);
+  assert.match(q(31), /сам не доводить причину/);
+  for (const page of [html, finalHtml]) {
+    assert.match(page, /START10 та FINAL35 мають різні запитання/);
+    assert.match(page, /Один навчальний випадок ще не доводить/);
+    assert.doesNotMatch(page, /складніших за стартові|по них видно, що змінилось/);
+  }
+  for (const text of [finalFallback, F.markdown(exported(F, 3))]) {
+    assert.match(text, /mini-audit-final-v2/);
+    assert.match(text, /не порівню/);
+    assert.match(text, /необовʼязковий огляд тем/);
+  }
+  assert.throws(() => F.markdown({...exported(F, 3), version:'mini-audit-final-v1'}));
 });
