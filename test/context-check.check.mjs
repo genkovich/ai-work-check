@@ -160,8 +160,9 @@ test('public setup covers one selected host and a real Git baseline',()=>{
   assert.doesNotMatch(html,/\/sdd:interview|\/init/);
 });
 
-test('public lesson names one canonical policy and short adapters without exposing private code',()=>{
-  for(const value of ['AGENTS.md','views/AGENTS.md','docs/rules/session-data.md','.claude/rules/session-data.md','.cursor/rules/session-data.mdc','@../../docs/rules/session-data.md','@docs/rules/session-data.md','lib/claude/**/*.js'])assert.ok(html.includes(value),value);
+test('public lesson names the per-zone rules and their patterns without exposing private code',()=>{
+  for(const value of ['AGENTS.md','views/AGENTS.md','.claude/rules/javascript.md','.claude/rules/tests.md','.claude/rules/views.md','.cursor/rules/javascript.mdc','@.claude/rules/javascript.md','paths: ["**/*.js", "**/*.mjs"]','paths: ["test/**"]','paths: ["views/**/*.js"]'])assert.ok(html.includes(value),value);
+  assert.doesNotMatch(html,/session-data|docs\/rules/);
   assert.ok(html.includes('docs/architecture-map.md'));
   assert.doesNotMatch(html,/docs\/idea-brief\.md|docs\/practice\/handoff\.md|02-context\.md/);
 });

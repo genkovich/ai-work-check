@@ -174,20 +174,20 @@ lib/sources.js, views/layout.js, scripts/demo.mjs і test/skeleton.test.js.
 <label class="check"><input type="checkbox" data-check="7">Познач після перевірки змісту й способу читання.</label>
 </article>
 <article class="step" id="step-8" data-step="8">
-<h2>8. Перевір правила для даних</h2>
+<h2>8. Перевір правила зони</h2>
 <p><span class="label">Що робити.</span></p>
-<p>Відкрий <code>docs/rules/session-data.md</code>. Тут єдина політика даних: навчальні фікстури, метадані замість текстів розмов, основні файли сесій і заборона запису застосунку в джерело.</p>
-<p>Поруч відкрий адаптер свого інструмента. Для Claude Code це <code>.claude/rules/session-data.md</code> з <code>paths: ["lib/claude/**/*.js"]</code> та імпортом <code>@../../docs/rules/session-data.md</code>. Для Cursor це <code>.cursor/rules/session-data.mdc</code> із тим самим <code>globs</code>, <code>alwaysApply: false</code> та посиланням <code>@docs/rules/session-data.md</code>.</p>
+<p>Відкрий <code>.claude/rules/javascript.md</code>. Тут технічні конвенції коду: префікс <code>node:</code>, лише named exports, синхронний <code>node:fs</code>, форма помилки. Правил три, кожне зі своїм <code>paths:</code> у frontmatter: <code>javascript.md</code> має <code>paths: ["**/*.js", "**/*.mjs"]</code>, <code>.claude/rules/tests.md</code> має <code>paths: ["test/**"]</code>, <code>.claude/rules/views.md</code> має <code>paths: ["views/**/*.js"]</code>.</p>
+<p>Поруч відкрий дзеркало для Cursor: <code>.cursor/rules/javascript.mdc</code> з <code>description</code>, <code>globs</code>, <code>alwaysApply: false</code> та посиланням <code>@.claude/rules/javascript.md</code>. Межі роботи з даними сесій лежать окремо, у розділі «Межі» кореневого <code>AGENTS.md</code>: вони діють у всьому застосунку, тому їм не місце в правилі однієї папки.</p>
 <pre id="block-23"><code>Готуємо майбутній список сесій. Зараз нічого не реалізуй.
-Прочитай lib/claude/index.js і правила для даних, на які вказує AGENTS.md.
-Назви дозволене джерело даних, межі читання та записи, які слід пропустити.
-Поясни, як правило повʼязане з lib/claude/index.js і views/layout.js.
-Посилайся на docs/rules/session-data.md. Не стверджуй, що текст правила
-технічно забороняє доступ або вже доводить безпеку реалізації.</code></pre><button class="copy" data-copy="block-23" type="button">Копіювати</button>
-<p>Шаблон охоплює <code>lib/claude/index.js</code>, але не <code>views/layout.js</code>. Політика стосується будь-якої роботи з даними; шаблон лише допомагає інструменту підключити її у відповідному місці.</p>
-<p>У Claude scoped rule завантажується при читанні відповідного файла. У Cursor правило з globs додається, коли відповідний файл є в контексті. Codex не покладається на ці адаптери: кореневий AGENTS прямо посилається на політику. Якщо автоматичного включення не видно, прочитай файл явно й запиши це.</p>
+Прочитай lib/claude/index.js і правило, яке підтягнулося разом із ним.
+Назви конвенції для коду цього файлу та межі роботи з джерелом сесій.
+Скажи, звідки взялося кожне твердження: файл правила чи розділ AGENTS.md.
+Не стверджуй, що текст правила технічно забороняє доступ
+або вже доводить безпеку реалізації.</code></pre><button class="copy" data-copy="block-23" type="button">Копіювати</button>
+<p>Шаблон <code>views/**/*.js</code> охоплює <code>views/layout.js</code>, але не <code>lib/claude/index.js</code>. Вкладений <code>AGENTS.md</code> групує інструкції біля папки; правило з патерном вибирає файли за умовою.</p>
+<p>У Claude scoped rule завантажується при читанні відповідного файла. У Cursor правило з globs додається, коли відповідний файл є в контексті. Codex не покладається на ці адаптери: кореневий AGENTS тримає межі й команди сам. Якщо автоматичного включення не видно, прочитай файл явно й запиши це.</p>
 <p>Документація: <a href="https://code.claude.com/docs/en/memory">Claude Code</a>, <a href="https://developers.openai.com/codex/guides/agents-md">Codex AGENTS</a>, <a href="https://cursor.com/docs/context/rules">Cursor rules</a>. Текстові правила не замінюють технічних прав доступу.</p>
-<p><span class="label">Що має бути видно.</span> Агент називає канонічну політику та правильно пояснює джерело даних, межі й шаблон шляхів.</p>
+<p><span class="label">Що має бути видно.</span> Агент називає правило своєї зони, його <code>paths:</code> і межі з AGENTS.md, та розрізняє, що звідки взялося.</p>
 <label class="check"><input type="checkbox" data-check="8">Познач після власної звірки правил.</label>
 </article>
 <article class="step" id="step-9" data-step="9">
@@ -240,7 +240,7 @@ git status --short</code></pre><button class="copy" data-copy="block-26" type="b
 'use strict';
 globalThis.ContextCheck=(()=>{
   const VERSION='context-check-v3-curated',KEY='ai-work-check:context-check-v3-curated';
-  const TITLES=["Завантаж і відкрий проєкт","Перевір і запусти застосунок","Підготуй Git, агента й SDD","Прочитай основні інструкції","Створи карту через survey","Перевір карту за кодом","Знайди вкладені інструкції","Перевір правила для даних","Перевір нову сесію","Переглянь зміни й збережи результат"];
+  const TITLES=["Завантаж і відкрий проєкт","Перевір і запусти застосунок","Підготуй Git, агента й SDD","Прочитай основні інструкції","Створи карту через survey","Перевір карту за кодом","Знайди вкладені інструкції","Перевір правила зони","Перевір нову сесію","Переглянь зміни й збережи результат"];
   const empty=()=>Array(10).fill(false);
   const valid=checked=>Array.isArray(checked)&&checked.length===10&&checked.every(value=>typeof value==='boolean');
   function parse(raw){
