@@ -85,13 +85,6 @@ if (kit) {
   fmd = must(fmd, 'Стартова анкета: [questionnaire.md](questionnaire.md).', 'Стартова анкета: [01-ai-development-audit.md](01-ai-development-audit.md).', 'final md start link');
   write(kit, 'templates/07-final-questionnaire.md', fmd);
 
-  let t = read('test/first-step.check.mjs');
-  t = must(t, 'Run: node --test test/first-step.check.mjs', "Run: node --test test/first-step.check.js\n// Deliberately outside *.test.js: the dashboard's existing verify suite is unchanged.", 'run line');
-  t = must(t, "new URL('../index.html', import.meta.url)", "new URL('../first-step.html', import.meta.url)", 'html path');
-  t = must(t, "new URL('../final.html', import.meta.url)", "new URL('../final-step.html', import.meta.url)", 'final html path');
-  t = must(t, "new URL('../questionnaire.md', import.meta.url)", "new URL('../templates/01-ai-development-audit.md', import.meta.url)", 'md path');
-  t = must(t, "new URL('../final-questionnaire.md', import.meta.url)", "new URL('../templates/07-final-questionnaire.md', import.meta.url)", 'final md path');
-  write(kit, 'test/first-step.check.js', t);
 }
 
 console.log('built: ' + written.join(', '));

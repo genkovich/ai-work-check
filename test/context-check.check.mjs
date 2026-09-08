@@ -155,13 +155,13 @@ test('all copy controls and evidence fields have real unique DOM targets',()=>{
 
 
 test('public setup covers one selected host and a real Git baseline',()=>{
-  for(const value of ['git clone https://github.com/genkovich/agentic-engineering-mini-kit.git','Code → Download ZIP','File → Open Folder','Terminal → New Terminal','node --version','git init','git rev-parse --show-toplevel','git config user.name','git config user.email','git rev-parse HEAD','npm ci','npm run verify','npm run demo'])assert.ok(html.includes(value),value);
+  for(const value of ['git clone https://github.com/genkovich/agentic-engineering-mini-kit.git','Code → Download ZIP','File → Open Folder','Terminal → New Terminal','node --version','git init','git rev-parse --show-toplevel','git config user.name','git config user.email','git tag start','npm ci','npm run verify','npm run demo'])assert.ok(html.includes(value),value);
   for(const value of ['/sdd:survey','$sdd-survey','bash -s -- codex','bash -s -- cursor','/reload-plugins'])assert.ok(html.includes(value),value);
   assert.doesNotMatch(html,/\/sdd:interview|\/init/);
 });
 
 test('public lesson names one canonical policy and short adapters without exposing private code',()=>{
-  for(const value of ['AGENTS.md','views/AGENTS.md','docs/rules/session-data.md','.claude/rules/session-index.md','.cursor/rules/session-data.mdc','@../../docs/rules/session-data.md','@docs/rules/session-data.md','lib/claude/**/*.js'])assert.ok(html.includes(value),value);
+  for(const value of ['AGENTS.md','views/AGENTS.md','docs/rules/session-data.md','.claude/rules/session-data.md','.cursor/rules/session-data.mdc','@../../docs/rules/session-data.md','@docs/rules/session-data.md','lib/claude/**/*.js'])assert.ok(html.includes(value),value);
   assert.ok(html.includes('docs/architecture-map.md'));
   assert.doesNotMatch(html,/docs\/idea-brief\.md|docs\/practice\/handoff\.md|02-context\.md/);
 });

@@ -82,8 +82,8 @@ git config user.email "YOUR COMMIT EMAIL"</code></pre><button class="copy" data-
 git diff --cached --stat
 git commit -m "Start mini-course practice"</code></pre><button class="copy" data-copy="block-10" type="button">Копіювати</button>
 <p>Clone вже має початкову історію; ці команди йому не потрібні. Відкрий <code>.claude/sdd.local.example.md</code> у редакторі й через <strong>File → Save As</strong> збережи копію як <code>.claude/sdd.local.md</code>. Наявні власні налаштування не перезаписуй. Цей локальний файл уже виключено з Git.</p>
-<pre id="block-11"><code>git rev-parse HEAD</code></pre><button class="copy" data-copy="block-11" type="button">Копіювати</button>
-<p>Збережи повний хеш поза пакетом. У фінальних командах він замінить <code>BASE_COMMIT</code>. Survey робить коміт, тому лише звичайного diff наприкінці буде недостатньо.</p>
+<pre id="block-11"><code>git tag start</code></pre><button class="copy" data-copy="block-11" type="button">Копіювати</button>
+<p>Це мітка на стан до практики, щоб наприкінці побачити всі зміни однією командою. Survey робить коміт, тому лише звичайного diff наприкінці буде недостатньо.</p>
 <h3>Claude Code: основний показ у відео</h3>
 <p>У звичайному терміналі перевір:</p>
 <pre id="block-12"><code>claude --version</code></pre><button class="copy" data-copy="block-12" type="button">Копіювати</button>
@@ -108,7 +108,7 @@ git commit -m "Start mini-course practice"</code></pre><button class="copy" data
 <pre id="block-18"><code>curl -fsSL https://raw.githubusercontent.com/genkovich/sdd/main/install.sh | bash -s -- cursor</code></pre><button class="copy" data-copy="block-18" type="button">Копіювати</button>
 <p>Перезапусти Cursor або виконай <strong>Developer: Reload Window</strong>. У чаті введи <code>/</code> та вибери <code>sdd-survey</code>.</p>
 <p>Для Codex скрипт додає <code>.agents/skills/</code> і <code>.codex/agents/</code>, для Cursor <code>.cursor/skills/</code> і <code>.cursor/agents/</code>. Це очікувані файли встановлення; код застосунку вони не реалізують.</p>
-<p><span class="label">Що має бути видно.</span> Корінь Git збігається з текою пакета. Початковий хеш збережено, локальні налаштування є, survey доступний у вибраному агенті.</p>
+<p><span class="label">Що має бути видно.</span> Корінь Git збігається з текою пакета. Мітку start поставлено, локальні налаштування є, survey доступний у вибраному агенті.</p>
 <label class="check"><input type="checkbox" data-check="3">Познач, коли один обраний інструмент готовий до роботи.</label>
 </article>
 <article class="step" id="step-4" data-step="4">
@@ -152,7 +152,7 @@ lib/sources.js, views/layout.js, scripts/demo.mjs і test/skeleton.test.js.
 Відділи поточний код від планів та коментарів.
 Нічого не змінюй без мого погодження. Особисті логи не відкривай.</code></pre><button class="copy" data-copy="block-21" type="button">Копіювати</button>
 <p>У <code>server.js</code> є прямий імпорт <code>claudeHome</code> з адаптера, хоча коментар <code>lib/sources.js</code> каже про відсутність таких імпортів. У <code>lib/claude/index.js</code> ще немає функції читання списку. Карта має описувати фактичний код.</p>
-<p>Для нечіткої відповіді попроси формат «твердження | стан | джерело». Без зразка це <strong>Zero-shot</strong>. Один приклад «GET / показує порожню сторінку | є зараз | server.js» дає <strong>One-shot</strong>. Додай «Список сесій | бажана зміна | README.md» і матимеш <strong>Few-shot</strong>. Джерела прикладів уже відкриті; це не перенавчання моделі.</p>
+<p>Для нечіткої відповіді попроси формат «твердження | стан | джерело». Без зразка це <strong>Zero-shot</strong>. Один приклад «GET / показує порожню сторінку | є зараз | server.js» дає <strong>One-shot</strong>. Додай «Список сесій | бажана зміна | docs/roadmap.md» і матимеш <strong>Few-shot</strong>. Джерела прикладів уже відкриті; це не перенавчання моделі.</p>
 <p>Поділ «прочитай → порівняй → запропонуй правки» називається декомпозицією. Chain-of-thought стосується проміжних кроків міркування. Тут ми звіряємо джерела й висновок; внутрішніх міркувань моделі не бачимо.</p>
 <p>Погодь лише підтверджені виправлення карти. Якщо помилки немає, вигадувати її для проходження не потрібно.</p>
 <p><span class="label">Що має бути видно.</span> Твердження карти підтверджуються кодом; заплановані можливості не описані як готові.</p>
@@ -177,7 +177,7 @@ lib/sources.js, views/layout.js, scripts/demo.mjs і test/skeleton.test.js.
 <h2>8. Перевір правила для даних</h2>
 <p><span class="label">Що робити.</span></p>
 <p>Відкрий <code>docs/rules/session-data.md</code>. Тут єдина політика даних: навчальні фікстури, метадані замість текстів розмов, основні файли сесій і заборона запису застосунку в джерело.</p>
-<p>Поруч відкрий адаптер свого інструмента. Для Claude Code це <code>.claude/rules/session-index.md</code> з <code>paths: ["lib/claude/**/*.js"]</code> та імпортом <code>@../../docs/rules/session-data.md</code>. Для Cursor це <code>.cursor/rules/session-data.mdc</code> із тим самим <code>globs</code>, <code>alwaysApply: false</code> та посиланням <code>@docs/rules/session-data.md</code>.</p>
+<p>Поруч відкрий адаптер свого інструмента. Для Claude Code це <code>.claude/rules/session-data.md</code> з <code>paths: ["lib/claude/**/*.js"]</code> та імпортом <code>@../../docs/rules/session-data.md</code>. Для Cursor це <code>.cursor/rules/session-data.mdc</code> із тим самим <code>globs</code>, <code>alwaysApply: false</code> та посиланням <code>@docs/rules/session-data.md</code>.</p>
 <pre id="block-23"><code>Готуємо майбутній список сесій. Зараз нічого не реалізуй.
 Прочитай lib/claude/index.js і правила для даних, на які вказує AGENTS.md.
 Назви дозволене джерело даних, межі читання та записи, які слід пропустити.
@@ -212,15 +212,15 @@ lib/sources.js, views/layout.js, scripts/demo.mjs і test/skeleton.test.js.
 <p><span class="label">Що робити.</span></p>
 <p>У звичайному терміналі повтори:</p>
 <pre id="block-25"><code>npm run verify</code></pre><button class="copy" data-copy="block-25" type="button">Копіювати</button>
-<p>У командах нижче заміни <code>BASE_COMMIT</code> своїм повним хешем із кроку 3:</p>
-<pre id="block-26"><code>git log --oneline BASE_COMMIT..HEAD
-git diff BASE_COMMIT HEAD
+<p>Порівняй поточний стан із міткою <code>start</code> із кроку 3:</p>
+<pre id="block-26"><code>git log --oneline start..HEAD
+git diff start HEAD
 git diff HEAD
 git status --short</code></pre><button class="copy" data-copy="block-26" type="button">Копіювати</button>
 <p>Команди показують коміти, закомічені й незакомічені зміни. Нові невідстежувані файли видно через status; відкрий їх окремо. Survey міг уже закомітити карту, тому порожній diff сам по собі не означає, що змін не було.</p>
 <p>Очікуємо карту й службові файли обраного встановлення SDD. Код, тести й залежності залишаються початковими. Уточнення готових інструкцій допустимі лише після твоєї перевірки та погодження; обовʼязкових правок заради вправи немає.</p>
 <p>Заповни поля під кроками: інструмент, фактичні запуски, перевірка нової сесії та неперевірене. Натисни <strong>Зберегти результат текстом</strong> до закриття сторінки. Поля не зберігаються автоматично, навіть якщо ввімкнено збереження позначок. Не вставляй секрети й приватні розмови.</p>
-<p>У проєкті потрібна лише карта від survey. Окремі interview, бриф, roadmap і handoff для другого уроку не створюємо.</p>
+<p>У проєкті потрібна лише карта від survey. Roadmap у кіті вже готовий, ми його читаємо; окремі interview, бриф і handoff для другого уроку не створюємо.</p>
 <p><span class="label">Що має бути видно.</span> Два тести проходять, зміни зрозумілі, карта перевірена, власний результат нової сесії записано й експортовано.</p>
 <label class="check"><input type="checkbox" data-check="10">Познач після перевірки та збереження результату.</label>
 </article>
@@ -229,7 +229,7 @@ git status --short</code></pre><button class="copy" data-copy="block-26" type="b
 <h2 id="evidence-title">Твій результат перевірки</h2>
 <p>Запиши коротко, що реально відбулося. Кожне поле вміщує до 3000 символів. Ці записи залишаються лише у відкритій вкладці до експорту; збереження позначок їх не зберігає. Не вставляй секрети або приватні розмови.</p>
 <label for="evidence-agent">Інструмент і версія</label><textarea id="evidence-agent" data-evidence="agent" maxlength="3000" placeholder="Назва агента, версія, спосіб встановлення SDD"></textarea>
-<label for="evidence-checks">Команди й фактичний результат</label><textarea id="evidence-checks" data-evidence="checks" maxlength="3000" placeholder="Початковий хеш; npm run verify; що показали demo та Git"></textarea>
+<label for="evidence-checks">Команди й фактичний результат</label><textarea id="evidence-checks" data-evidence="checks" maxlength="3000" placeholder="Мітка start; npm run verify; що показали demo та Git"></textarea>
 <label for="evidence-fresh">Що показала нова сесія</label><textarea id="evidence-fresh" data-evidence="fresh" maxlength="3000" placeholder="Які висновки звірено з файлами; що агент прочитав явно; реальна неточність і виправлення, якщо були"></textarea>
 <label for="evidence-limits">Що залишилося неперевіреним</label><textarea id="evidence-limits" data-evidence="limits" maxlength="3000" placeholder="Наприклад: автоматичне завантаження не підтверджено; інший агент не запускався"></textarea>
 <p>Натисни «Зберегти результат текстом» угорі сторінки. Експорт містить твої записи й позначки, але сам по собі не засвідчує виконання команд.</p>
