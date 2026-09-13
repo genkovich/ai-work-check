@@ -22,6 +22,8 @@ const DATE = '2026-09-06T10:00:00.000Z';
 // \b is ASCII-only in JS, so the old /\bне .../ never matched after a Cyrillic letter or a space; this one does.
 const ANTITHESIS = /(?:^|[^а-яіїєґʼ])не [^,]{1,40}, а /;
 const TOOLS = /Claude|Codex|Cursor|Copilot|Gemini|ChatGPT|Kiro|Windsurf|MCP|CLAUDE\.md|AGENTS\.md|\.mdc\b/;
+// Назва теми «Інтеграції через MCP» єдине дозволене місце для слова MCP: у текстах запитань і програми його немає.
+const TOOLS_DOC = /Claude|Codex|Cursor|Copilot|Gemini|ChatGPT|Kiro|Windsurf|CLAUDE\.md|AGENTS\.md|\.mdc\b/;
 const SECOND_PERSON = /(?:^|\s)(ти|тебе|тобі|тв[а-яіїєґ]+)(?=[\s,.?])|(єш|еш|иш|їш)(?=[\s,.?])/i;
 const COMPARISON = /START10|FINAL35|зі стартов|стартов(ою|ої) анкет|різні запитання/;
 const parity = (X, md) => { for (const q of X.QUESTIONS) { const g = X.GROUPS[q.group]; const row = X.mode === 'final' ? '| '+q.number+' | '+q.text+' | '+g.name+' | '+X.roleText(g)+' |' : '| '+q.number+' | '+q.text+' | '+g.name+' | '+X.linksText(g)+' | '+X.lessonText(g)+' |'; assert.ok(md.includes(row), 'parity '+X.mode+' q'+q.number); } };
@@ -44,17 +46,17 @@ test('start: ten questions in five chain pairs, each mapped to links and a lesso
   }
 });
 
-test('final: 45 questions, three per topic, fifteen topics in two roles with why and program, no module tags, Markdown parity', () => {
+test('final: 33 questions, three per topic, eleven topics in one role with why and program, no module tags, Markdown parity', () => {
   assert.equal(F.mode, 'final');
-  assert.equal(F.QUESTIONS.length, 45);
-  assert.equal(new Set(F.QUESTIONS.map(q => q.id)).size, 45);
-  assert.deepEqual(clean(F.QUESTIONS.map(q => q.id)), Array.from({length: 45}, (_, i) => 'q'+(i+1)));
-  assert.equal(F.GROUPS.length, 15);
-  for (let i = 0; i < 15; i++) assert.equal(F.QUESTIONS.filter(q => q.group === i).length, 3);
+  assert.equal(F.QUESTIONS.length, 33);
+  assert.equal(new Set(F.QUESTIONS.map(q => q.id)).size, 33);
+  assert.deepEqual(clean(F.QUESTIONS.map(q => q.id)), Array.from({length: 33}, (_, i) => 'q'+(i+1)));
+  assert.equal(F.GROUPS.length, 11);
+  for (let i = 0; i < 11; i++) assert.equal(F.QUESTIONS.filter(q => q.group === i).length, 3);
   assert.deepEqual(clean(F.GROUPS), clean(M.TOPICS)); assert.deepEqual(clean(A.GROUPS), clean(M.SEAMS)); assert.notDeepEqual(clean(F.GROUPS), clean(A.GROUPS));
-  assert.deepEqual(clean(F.GROUPS.map(g => g.id)), Array.from({length: 15}, (_, i) => i));
-  assert.deepEqual(clean(F.GROUPS.map(g => g.role)), [...Array(8).fill('engineer'), ...Array(7).fill('lead')]);
-  assert.deepEqual(clean(F.GROUPS.map(g => g.name)), ['Problem Framing','Architecture','Context Engineering','Specification','Decomposition','Orchestration','Verification','Product Thinking','Що віддавати AI','Стандарти','Спільний контекст','Контроль якості','Human-in-the-loop','Навчання команди','Вимір ефекту']);
+  assert.deepEqual(clean(F.GROUPS.map(g => g.id)), Array.from({length: 11}, (_, i) => i));
+  assert.deepEqual(clean(F.GROUPS.map(g => g.role)), Array(11).fill('engineer'));
+  assert.deepEqual(clean(F.GROUPS.map(g => g.name)), ['Ціна й межі моделі','Агент і його інструменти','Налаштування середовища','Промпт і контекст','Розширення: команди, скіли, hooks','Підготовка проєкту: від ідеї до задач','Виконання й масштаб','Інтеграції через MCP','Ревʼю, PR і CI/CD','Команди агентів','Production і команда']);
   for (const g of F.GROUPS) {
     assert.deepEqual(Object.keys(g), ['id','role','name','why','program']);
     assert.ok(g.why.length > 20, 'why '+g.name);
@@ -65,8 +67,8 @@ test('final: 45 questions, three per topic, fifteen topics in two roles with why
     assert.doesNotMatch(g.why+' '+g.program, TOOLS, 'tool name in topic '+g.name);
     assert.equal(F.roleText(g), F.roleOf(g).name); assert.equal(F.subText(g), F.roleText(g)); assert.equal(F.tagText(g), '');
   }
-  assert.deepEqual(clean(F.ROLES.map(r => Object.keys(r))), [['id','name','intro'],['id','name','intro']]);
-  assert.deepEqual(clean(F.ROLES.map(r => [r.id, r.name])), [['engineer','Інженер'],['lead','Tech Lead / EM / CTO']]);
+  assert.deepEqual(clean(F.ROLES.map(r => Object.keys(r))), [['id','name','intro']]);
+  assert.deepEqual(clean(F.ROLES.map(r => [r.id, r.name])), [['engineer','Інженер']]);
   for (const r of F.ROLES) { assert.ok(r.intro.length > 20); assert.doesNotMatch(r.intro, /[—–…]/); assert.doesNotMatch(r.intro, ANTITHESIS); }
   for (const g of A.GROUPS) { assert.equal(A.subText(g), A.linksText(g)); assert.equal(A.tagText(g), A.lessonText(g)); }
   for (const X of [A, F]) for (const q of X.QUESTIONS) assert.deepEqual(Object.keys(q), ['id','number','group','text','hint','next']);
@@ -84,7 +86,7 @@ test('final.html is index.html in final mode: same engine and UI byte for byte, 
   assert.equal(part(finalHtml, 'audit-engine'), part(html, 'audit-engine'));
   assert.equal(part(finalHtml, 'audit-ui'), part(html, 'audit-ui'));
   assert.match(html, /<html lang="uk" data-mode="start">/); assert.match(finalHtml, /<html lang="uk" data-mode="final">/);
-  assert.match(finalHtml, /<title>Як я працюю з AI після мінікурсу: 45 запитань<\/title>/);
+  assert.match(finalHtml, /<title>Як я працюю з AI після мінікурсу: 33 запитання<\/title>/);
   assert.match(finalHtml, /Мінікурс · урок 6 · фінальна анкета/);
   assert.match(finalHtml, /href="https:\/\/agenticengineering\.it\.com\/"[^>]*>Подати заявку на консультацію</);
   assert.match(finalHtml, /для завершення мінікурсу заявку подавати не потрібно/i);
@@ -93,11 +95,11 @@ test('final.html is index.html in final mode: same engine and UI byte for byte, 
   assert.match(finalHtml, /final-questionnaire\.md/); assert.doesNotMatch(html, /final-questionnaire\.md/);
   assert.match(html, /href="final(-step)?\.html"/);
   assert.match(html, /html\[data-mode="final"\] \.start-only,html\[data-mode="start"\] \.final-only\{display:none!important\}/);
-  for (const page of [html, finalHtml]) { assert.doesNotMatch(page, COMPARISON); assert.match(page, /Пропустити блок/); }
-  assert.match(html, /фінальна анкета на 45 запитань/);
+  for (const page of [html, finalHtml]) { assert.doesNotMatch(page, COMPARISON); assert.doesNotMatch(page, /Пропустити блок|skip-lead/); }
+  assert.match(html, /фінальна анкета на 33 запитання/);
 });
 
-test('five levels 0..4 plus a separate no-experience mark; start is v3, final is final-v3', () => {
+test('five levels 0..4 plus a separate no-experience mark; start is v3, final is final-v4', () => {
   for (const X of [A, F]) {
     assert.deepEqual(clean(X.LEVELS.map(l => l.value)), [0,1,2,3,4]);
     assert.deepEqual(clean(X.LEVELS.map(l => l.label)), ['Ніколи','Рідко','У половині випадків','Майже завжди','Завжди']);
@@ -105,7 +107,7 @@ test('five levels 0..4 plus a separate no-experience mark; start is v3, final is
     assert.equal(X.answerLabel(2), '2 · У половині випадків'); assert.equal(X.answerLabel('none'), X.NONE_LABEL);
     assert.equal(X.STRONG_SHARE, 0.75); assert.equal(X.WEAK_SHARE, 0.5);
   }
-  assert.equal(A.VERSION, 'mini-audit-v3'); assert.equal(F.VERSION, 'mini-audit-final-v3');
+  assert.equal(A.VERSION, 'mini-audit-v3'); assert.equal(F.VERSION, 'mini-audit-final-v4');
   assert.equal(M.SETS.start.version, A.VERSION); assert.equal(M.SETS.final.version, F.VERSION);
   for (const md of [fallback, finalFallback]) for (const l of A.LEVELS) assert.ok(md.includes('**'+l.value+': '+l.label+'**'), 'level '+l.value+' in md');
   assert.throws(() => M.create('other')); assert.throws(() => M.create('constructor'));
@@ -123,8 +125,8 @@ test('blank and partial answers cannot produce an export', () => {
   }
 });
 
-test('all 4 = 40/40 on start and 180/180 on final; all 2 and all 0 scale with it', () => {
-  for (const [X, full, perGroup] of [[A, 40, 8], [F, 180, 12]]) for (const [level, share] of [[4,1],[2,.5],[0,0]]) {
+test('all 4 = 40/40 on start and 132/132 on final; all 2 and all 0 scale with it', () => {
+  for (const [X, full, perGroup] of [[A, 40, 8], [F, 132, 12]]) for (const [level, share] of [[4,1],[2,.5],[0,0]]) {
     const r = X.calculate(answers(X, level));
     assert.equal(r.total, full*share); assert.equal(r.max, full); assert.equal(r.applicable, X.QUESTIONS.length); assert.equal(r.withoutExperience, 0);
     assert.equal(X.scoreText(r), full*share+' / '+full);
@@ -147,9 +149,9 @@ test('all none is complete and unscored: no weakest group, empty seam summary, f
     assert.doesNotMatch(X.markdown(data), /NaN|Infinity|0\s*\/\s*0|undefined|null/);
   }
   assert.match(A.weakestText(exported(A, 'none').result), /Intent/); assert.match(A.weakestText(exported(A, 'none').result), /урок 1/);
-  assert.match(F.weakestText(exported(F, 'none').result), /Problem Framing/); assert.doesNotMatch(F.weakestText(exported(F, 'none').result), /урок|стик/);
-  assert.deepEqual(clean(F.roleSummary(exported(F, 'none').result).map(r => [r.id, r.rated, r.skipped, r.weak])), [['engineer',0,true,[]],['lead',0,true,[]]]);
-  assert.equal(F.weakTopicsText(exported(F, 'none').result), 'Інженер: блок пропущено, усі відповіді без досвіду. Tech Lead / EM / CTO: блок пропущено, усі відповіді без досвіду.');
+  assert.match(F.weakestText(exported(F, 'none').result), /Ціна й межі моделі/); assert.doesNotMatch(F.weakestText(exported(F, 'none').result), /урок|стик/);
+  assert.deepEqual(clean(F.roleSummary(exported(F, 'none').result).map(r => [r.id, r.rated, r.skipped, r.weak])), [['engineer',0,true,[]]]);
+  assert.equal(F.weakTopicsText(exported(F, 'none').result), 'Інженер: блок пропущено, усі відповіді без досвіду.');
 });
 
 test('mixed answers use the applicable denominator per group and overall', () => {
@@ -159,8 +161,8 @@ test('mixed answers use the applicable denominator per group and overall', () =>
   assert.deepEqual(clean(r.groups.map(g => [g.total, g.max, g.applicable, g.withoutExperience])), [[4,4,1,1],[2,8,2,0],[0,0,0,2],[7,8,2,0],[1,4,1,1]]);
   const fin = answers(F, 3); fin.q17 = 'none'; fin.q21 = 0; fin.q24 = 'none'; fin.q30 = 4;
   const f = F.calculate(fin);
-  assert.deepEqual([f.total, f.max, f.applicable, f.withoutExperience], [127, 172, 43, 2]);
-  const expected = Array.from({length: 15}, () => [9,12,3,0]); expected[5] = [6,8,2,1]; expected[7] = [6,8,2,1]; expected[6] = [6,12,3,0]; expected[9] = [10,12,3,0];
+  assert.deepEqual([f.total, f.max, f.applicable, f.withoutExperience], [91, 124, 31, 2]);
+  const expected = Array.from({length: 11}, () => [9,12,3,0]); expected[5] = [6,8,2,1]; expected[7] = [6,8,2,1]; expected[6] = [6,12,3,0]; expected[9] = [10,12,3,0];
   assert.deepEqual(clean(f.groups.map(g => [g.total, g.max, g.applicable, g.withoutExperience])), expected);
 });
 
@@ -181,56 +183,56 @@ test('weakest group: lowest share wins, ties go to the earliest link, all-max st
   assert.throws(() => A.weakestGroup({}));
   const fin = answers(F, 4); for (let i = 16; i <= 18; i++) fin['q'+i] = 1;
   assert.equal(F.weakestGroup(F.calculate(fin)).id, 5);
-  assert.match(F.weakestText(F.calculate(fin)), /^Orchestration \(Інженер\), 3 з 12\. /);
+  assert.match(F.weakestText(F.calculate(fin)), /^Підготовка проєкту: від ідеї до задач \(Інженер\), 3 з 12\. /);
   assert.doesNotMatch(F.weakestText(F.calculate(fin)), /урок|стик|ланк/);
-  assert.match(F.weakestText(F.calculate(answers(F, 4))), /^Problem Framing \(Інженер\), 12 з 12\. /);
+  assert.match(F.weakestText(F.calculate(answers(F, 4))), /^Ціна й межі моделі \(Інженер\), 12 з 12\. /);
 });
 
 test('seam summary: three quarters and up holds, under a half sags, the rest in between, chain order inside each bucket, unrated seams skipped', () => {
   const a = answers(F, 4);
   for (let i = 4; i <= 6; i++) a['q'+i] = 2;
   for (let i = 19; i <= 21; i++) a['q'+i] = 1;
-  for (let i = 25; i <= 45; i++) a['q'+i] = 'none';
+  for (let i = 25; i <= 33; i++) a['q'+i] = 'none';
   a.q25 = 1;
   const r = F.calculate(a), s = F.seamSummary(r);
   assert.deepEqual(clean(s.strong.map(g => [g.id, g.total, g.max])), [[0,12,12],[2,12,12],[3,12,12],[4,12,12],[5,12,12],[7,12,12]]);
   assert.deepEqual(clean(s.middle.map(g => [g.id, g.total, g.max])), [[1,6,12]]);
   assert.deepEqual(clean(s.weak.map(g => [g.id, g.total, g.max])), [[6,3,12],[8,1,4]]);
   assert.deepEqual(Object.keys(clean(s.strong[0])), ['id','name','total','max','applicable','withoutExperience','role','why','program','share']);
-  assert.equal(F.seamText(r), 'Сильні: Problem Framing (12 з 12), Context Engineering (12 з 12), Specification (12 з 12), Decomposition (12 з 12), Orchestration (12 з 12), Product Thinking (12 з 12). Посередині: Architecture (6 з 12). Слабкі: Verification (3 з 12), Що віддавати AI (1 з 4).');
-  assert.match(F.seamText(F.calculate(answers(F, 4))), /^Сильні: .*Вимір ефекту \(12 з 12\)\.$/);
+  assert.equal(F.seamText(r), 'Сильні: Ціна й межі моделі (12 з 12), Налаштування середовища (12 з 12), Промпт і контекст (12 з 12), Розширення: команди, скіли, hooks (12 з 12), Підготовка проєкту: від ідеї до задач (12 з 12), Інтеграції через MCP (12 з 12). Посередині: Агент і його інструменти (6 з 12). Слабкі: Виконання й масштаб (3 з 12), Ревʼю, PR і CI/CD (1 з 4).');
+  assert.match(F.seamText(F.calculate(answers(F, 4))), /^Сильні: .*Production і команда \(12 з 12\)\.$/);
   assert.doesNotMatch(F.seamText(F.calculate(answers(F, 4))), /Посередині|Слабкі/);
   assert.match(F.seamText(F.calculate(answers(F, 0))), /^Слабкі: /);
   const onlyOne = answers(F, 'none'); onlyOne.q15 = 3;
-  assert.equal(F.seamText(F.calculate(onlyOne)), 'Сильні: Decomposition (3 з 4).');
+  assert.equal(F.seamText(F.calculate(onlyOne)), 'Сильні: Розширення: команди, скіли, hooks (3 з 4).');
   assert.equal(A.seamText(A.calculate(answers(A, 2))), 'Посередині: Зрозуміла задача (4 з 8), Потрібна інформація (4 з 8), Робота по кроках (4 з 8), Перевірка результату (4 з 8), Корисні висновки (4 з 8).');
   assert.throws(() => F.seamSummary({}));
 });
 
-test('role summary: weak topics per role under three quarters, ascending by share then by id, cut to three, a skipped lead block is named as such', () => {
+test('role summary: weak topics under three quarters, ascending by share then by id, cut to three, all-none is named as a skipped block', () => {
   const a = answers(F, 4);
   for (let i = 4; i <= 6; i++) a['q'+i] = 2;
   for (let i = 19; i <= 21; i++) a['q'+i] = 1;
-  for (let i = 25; i <= 45; i++) a['q'+i] = 'none';
+  for (let i = 25; i <= 33; i++) a['q'+i] = 'none';
   a.q25 = 1;
   const rs = F.roleSummary(F.calculate(a));
-  assert.deepEqual(clean(rs.map(r => [r.id, r.name, r.rated, r.skipped])), [['engineer','Інженер',8,false],['lead','Tech Lead / EM / CTO',1,false]]);
-  assert.deepEqual(clean(rs[0].weak.map(g => [g.id, g.name, g.total, g.max, g.share])), [[6,'Verification',3,12,0.25],[1,'Architecture',6,12,0.5]]);
-  assert.deepEqual(clean(rs[1].weak.map(g => [g.id, g.total, g.max])), [[8,1,4]]);
+  assert.deepEqual(clean(rs.map(r => [r.id, r.name, r.rated, r.skipped])), [['engineer','Інженер',9,false]]);
+  assert.deepEqual(clean(rs[0].weak.map(g => [g.id, g.name, g.total, g.max, g.share])), [[6,'Виконання й масштаб',3,12,0.25],[8,'Ревʼю, PR і CI/CD',1,4,0.25],[1,'Агент і його інструменти',6,12,0.5]]);
   assert.deepEqual(Object.keys(clean(rs[0].weak[0])), ['id','name','total','max','applicable','withoutExperience','role','why','program','share']);
-  assert.equal(F.weakTopicsText(F.calculate(a)), 'Інженер: Verification (3 з 12), Architecture (6 з 12). Tech Lead / EM / CTO: Що віддавати AI (1 з 4).');
+  assert.equal(F.weakTopicsText(F.calculate(a)), 'Інженер: Виконання й масштаб (3 з 12), Ревʼю, PR і CI/CD (1 з 4), Агент і його інструменти (6 з 12).');
   const edge = answers(F, 4);
   edge.q1 = 1; edge.q4 = 0; edge.q7 = 0; edge.q8 = 0; edge.q10 = 0; edge.q13 = 0; edge.q14 = 0; edge.q15 = 0;
   const e = F.roleSummary(F.calculate(edge));
   assert.deepEqual(clean(e[0].weak.map(g => [g.id, g.total, g.max])), [[4,0,12],[2,4,12],[1,8,12]]);
-  assert.deepEqual(clean(e[1].weak), []);
-  assert.equal(F.weakTopicsText(F.calculate(edge)), 'Інженер: Decomposition (0 з 12), Context Engineering (4 з 12), Architecture (8 з 12). Tech Lead / EM / CTO: усі оцінені теми на рівні три чверті й вище.');
-  const skipped = answers(F, 3); for (let i = 25; i <= 45; i++) skipped['q'+i] = 'none';
+  assert.equal(F.weakTopicsText(F.calculate(edge)), 'Інженер: Розширення: команди, скіли, hooks (0 з 12), Налаштування середовища (4 з 12), Агент і його інструменти (8 з 12).');
+  const high = answers(F, 3);
+  assert.equal(F.weakTopicsText(F.calculate(high)), 'Інженер: усі оцінені теми на рівні три чверті й вище.');
+  const skipped = answers(F, 'none');
   const sk = F.roleSummary(F.calculate(skipped));
-  assert.deepEqual(clean(sk.map(r => [r.id, r.rated, r.skipped, r.weak.length])), [['engineer',8,false,0],['lead',0,true,0]]);
-  assert.match(F.weakTopicsText(F.calculate(skipped)), /Tech Lead \/ EM \/ CTO: блок пропущено, усі відповіді без досвіду\.$/);
+  assert.deepEqual(clean(sk.map(r => [r.id, r.rated, r.skipped, r.weak.length])), [['engineer',0,true,0]]);
+  assert.match(F.weakTopicsText(F.calculate(skipped)), /^Інженер: блок пропущено, усі відповіді без досвіду\.$/);
   assert.throws(() => F.roleSummary({}));
-  assert.deepEqual(clean(A.roleSummary(A.calculate(answers(A, 4))).map(r => [r.id, r.rated, r.skipped])), [['engineer',0,true],['lead',0,true]]);
+  assert.deepEqual(clean(A.roleSummary(A.calculate(answers(A, 4))).map(r => [r.id, r.rated, r.skipped])), [['engineer',0,true]]);
 });
 
 test('first habit: earliest question with the lowest level; all 4 = habits in place; none-only questions skipped', () => {
@@ -243,12 +245,12 @@ test('first habit: earliest question with the lowest level; all 4 = habits in pl
   const top = A.nextStep(answers(A, 4)); assert.equal(top.question, null); assert.match(top.text, /на місці/);
   const mostlyNone = answers(A, 'none'); mostlyNone.q10 = 4;
   assert.equal(A.nextStep(mostlyNone).question, null);
-  const fin = answers(F, 3); fin.q35 = 0; fin.q12 = 0;
+  const fin = answers(F, 3); fin.q33 = 0; fin.q12 = 0;
   assert.equal(F.nextStep(fin).question.id, 'q12'); assert.equal(F.nextStep(fin).text, F.QUESTIONS[11].next);
 });
 
 test('export carries version and mode, keeps the v1-shaped result, survives a JSON round trip and rejects the other mode', () => {
-  for (const [X, version] of [[A, 'mini-audit-v3'], [F, 'mini-audit-final-v3']]) {
+  for (const [X, version] of [[A, 'mini-audit-v3'], [F, 'mini-audit-final-v4']]) {
     const data = exported(X, 3);
     assert.equal(data.version, version); assert.equal(data.mode, X.mode); assert.equal(data.date, DATE);
     assert.deepEqual(Object.keys(data), ['version','mode','date','answers','result']);
@@ -275,7 +277,7 @@ test('unknown ids, out-of-range levels, strings, prototype keys and foreign vers
     assert.throws(() => X.markdown({version:'mini-audit-v1', mode:X.mode, date:DATE, answers: answers(X, 'A')}));
     assert.throws(() => X.markdown({...exported(X, 4), version:'future-v9'}));
   }
-  assert.throws(() => A.calculate({q11: 4})); assert.throws(() => F.calculate({q46: 4}));
+  assert.throws(() => A.calculate({q11: 4})); assert.throws(() => F.calculate({q34: 4}));
 });
 
 test('start Markdown carries the chain, every group with links and lesson, the weakest seam and every answer', () => {
@@ -294,33 +296,35 @@ test('start Markdown carries the chain, every group with links and lesson, the w
   assert.doesNotMatch(md, /NaN|undefined|null|0\s*\/\s*0/);
 });
 
-test('final Markdown names the weakest topics per role with why and program, then the seam summary, the first attempt and the fifteen topics', () => {
+test('final Markdown names the weakest topics with why and program, then the seam summary, the first attempt and the eleven topics', () => {
   const a = answers(F, 4); for (let i = 19; i <= 21; i++) a['q'+i] = 1; a.q17 = 'none'; a.q5 = 2;
   const md = F.markdown(F.makeExport(a, DATE));
-  assert.match(md, /^# Як я працюю з AI після мінікурсу: 45 запитань\n/);
-  assert.match(md, /Версія: mini-audit-final-v3/); assert.match(md, /Ролі: Інженер \(8 тем\), Tech Lead \/ EM \/ CTO \(7 тем\)/);
-  assert.match(md, /Бали: 165 \/ 176/); assert.match(md, /Поза підрахунком: 1 із 45/);
-  assert.match(md, /## Найслабші теми\n\n### Інженер\n\n\*\*Verification\*\*: 3 з 12\.\n\n«Готово» від агента не доводить, що працює саме потрібне\.\n\n[^\n]+\n\n### Tech Lead \/ EM \/ CTO\n\nУсі оцінені теми на рівні три чверті й вище\. [^\n]+\n\n## Сильні й слабкі теми\n\nСильні: Problem Framing \(12 з 12\), Architecture \(10 з 12\), [^\n]+ Слабкі: Verification \(3 з 12\)\.\n\n## Перша спроба\n\n/);
-  assert.ok(md.includes(F.GROUPS[6].program));
+  assert.match(md, /^# Як я працюю з AI після мінікурсу: 33 запитання\n/);
+  assert.match(md, /Версія: mini-audit-final-v4/); assert.match(md, /Роль: Інженер \(11 тем, по одній на тему основної програми\)/);
+  assert.match(md, /Бали: 117 \/ 128/); assert.match(md, /Поза підрахунком: 1 із 33/);
+  assert.match(md, new RegExp('## Найслабші теми\\n\\n### Інженер\\n\\n\\*\\*Виконання й масштаб\\*\\*: 3 з 12\\.\\n\\n[^\\n]+\\n\\n[^\\n]+\\n\\n## Сильні й слабкі теми\\n\\nСильні: Ціна й межі моделі \\(12 з 12\\), Агент і його інструменти \\(10 з 12\\), [^\\n]+ Слабкі: Виконання й масштаб \\(3 з 12\\)\\.\\n\\n## Перша спроба\\n\\n'));
+  assert.ok(md.includes(F.GROUPS[6].why)); assert.ok(md.includes(F.GROUPS[6].program));
   assert.ok(md.includes(F.QUESTIONS[18].next));
-  assert.match(md, /## Пʼятнадцять тем\n\n\| Тема \| Роль \| Бали \| Поза підрахунком \|\n\|---\|---\|---\|---\|\n\| Problem Framing \| Інженер \| 12 \/ 12 \| 0 \|\n/);
-  assert.ok(md.includes('| Orchestration | Інженер | 8 / 8 | 1 |'));
-  assert.ok(md.includes('| Вимір ефекту | Tech Lead / EM / CTO | 12 / 12 | 0 |'));
+  assert.match(md, new RegExp('## Одинадцять тем\\n\\n\\| Тема \\| Роль \\| Бали \\| Поза підрахунком \\|\\n\\|---\\|---\\|---\\|---\\|\\n\\| Ціна й межі моделі \\| Інженер \\| 12 \\/ 12 \\| 0 \\|\\n'));
+  assert.ok(md.includes('| Підготовка проєкту: від ідеї до задач | Інженер | 8 / 8 | 1 |'));
+  assert.ok(md.includes('| Production і команда | Інженер | 12 / 12 | 0 |'));
   assert.match(md, /## Відповіді\n\n\| № \| Запитання \| Відповідь \| Бали \|\n\|---\|---\|---\|---\|\n/);
   assert.ok(md.includes('| 19 | '+F.QUESTIONS[18].text+' | 1 · Рідко | 1 |'));
   assert.ok(md.includes('| 17 | '+F.QUESTIONS[16].text+' | Ще не було такої ситуації | Без бала |'));
-  assert.match(md, /## Як використати відповіді\n\nЦе самооцінка практик у двох ролях\./);
+  assert.match(md, /## Як використати відповіді\n\nЦе самооцінка практик в одинадцяти темах\./); assert.match(md, /docs\/practice\/06-audit\.md/);
   assert.doesNotMatch(md, /\bM\d{1,2}\b|модул|лекці|Де це в основній програмі|\| Модуль \||START10|FINAL35|зі стартов|Ланцюг курсу|Найслабший стик|Пʼять стиків|Перша звичка/i);
   assert.doesNotMatch(md, /NaN|undefined|null|0\s*\/\s*0/);
-  const skip = answers(F, 3); for (let i = 25; i <= 45; i++) skip['q'+i] = 'none';
+  const skip = answers(F, 3); for (let i = 25; i <= 33; i++) skip['q'+i] = 'none';
   const md2 = F.markdown(F.makeExport(skip, DATE));
-  assert.match(md2, /### Tech Lead \/ EM \/ CTO\n\nБлок пропущено: усі відповіді без досвіду\.\n\n## Сильні й слабкі теми/);
-  assert.match(md2, /Бали: 72 \/ 96/); assert.match(md2, /Поза підрахунком: 21 із 45/);
-  assert.ok(md2.includes('| Що віддавати AI | Tech Lead / EM / CTO | Поки немає досвіду для порівняння | 3 |'));
+  assert.match(md2, /### Інженер\n\nУсі оцінені теми на рівні три чверті й вище\. [^\n]+\n\n## Сильні й слабкі теми/);
+  assert.match(md2, /Бали: 72 \/ 96/); assert.match(md2, /Поза підрахунком: 9 із 33/);
+  assert.ok(md2.includes('| Ревʼю, PR і CI/CD | Інженер | Поки немає досвіду для порівняння | 3 |'));
+  const md3 = F.markdown(exported(F, 'none'));
+  assert.match(md3, /### Інженер\n\nБлок пропущено: усі відповіді без досвіду\.\n\n## Сильні й слабкі теми/);
   assert.doesNotMatch(md2, /NaN|undefined|null|0\s*\/\s*0/);
 });
 
-test('wording gates on all 55 questions: at most 25 words, no dashes or ellipsis, no "не X, а Y", hint 60-260 characters, final free of course map, tool names and third person', () => {
+test('wording gates on all 43 questions: at most 25 words, no dashes or ellipsis, no "не X, а Y", hint 60-260 characters, final free of course map, tool names and third person', () => {
   for (const X of [A, F]) for (const q of X.QUESTIONS) {
     const all = q.text+' '+q.hint+' '+q.next;
     assert.ok(words(q.text) <= 25, 'words q'+q.number+' '+X.mode+': '+words(q.text));
@@ -349,18 +353,18 @@ test('offline UI on both pages: no remote resources, storage, HTML sinks or file
     assert.match(page, /complete=result\.answered===N/);
     assert.match(page, /prefers-reduced-motion: ?reduce/); assert.match(page, /stroke-dashoffset/); assert.match(page, /IntersectionObserver/); assert.match(page, /requestAnimationFrame/);
     assert.match(page, /@media print/);
-    assert.match(page, /input\.click\(\)/);
+    assert.doesNotMatch(page, /skip-lead|input\.click\(\)/);
   }
 });
 
-test('page copy: chain intro, shopping-list example before questions on start, role panels and CTA on final, no module map or import anywhere', () => {
+test('page copy: chain intro, shopping-list example before questions on start, topic panel and CTA on final, no module map or import anywhere', () => {
   assert.match(html, /Мінікурс · урок 1 · стартова анкета/);
   assert.ok(html.indexOf('списком покупок') < html.indexOf('id="questions"'));
   assert.match(html, /Створювати застосунок зараз не потрібно/);
   assert.match(html, /Найслабший стик/); assert.match(html, /Перша звичка по ланцюгу/);
   assert.match(html, /низький результат на старті очікуваний/);
   assert.match(html, /3 або 4 став лише тоді/);
-  assert.match(html, /фінальна анкета на 45 запитань/);
+  assert.match(html, /фінальна анкета на 33 запитання/);
   assert.match(html, /<div class="panel example start-only">/);
   assert.match(html, /<div class="panel weak-panel start-only">/);
   assert.match(html, /<div class="panel roles-panel final-only" id="roles"><p class="panel-cap">Найслабші теми<\/p><\/div>/);
@@ -368,39 +372,39 @@ test('page copy: chain intro, shopping-list example before questions on start, r
   assert.match(html, /<span class="start-only">Перша звичка по ланцюгу<\/span><span class="final-only">Перша спроба<\/span>/);
   for (const page of [html, finalHtml]) assert.doesNotMatch(page, /[Іі]мпорт|попередній результат|A\/B\/C\/D|Так, зазвичай|Де це в основній програмі|Найслабші модулі|тег модуля|\bM1\b|M11|START10|FINAL35/);
   assert.match(finalHtml, /артефакт з останньої задачі/);
-  assert.match(finalHtml, /Блок команди можна пропустити однією кнопкою/);
+  assert.match(finalHtml, /Командний шар стоїть в останній темі/); assert.match(finalHtml, /docs\/practice\/06-audit\.md/);
   assert.match(finalHtml, /<div class="panel cta final-only" id="cta"><p class="panel-cap">Що далі<\/p>/);
   assert.match(fallback, /Download ZIP/); assert.ok(/genkovich\.github\.io\/ai-work-check|\.\.\/first-step\.html/.test(fallback));
   assert.match(fallback, /## Як читати результат/); assert.match(fallback, /низький результат на старті очікуваний/);
   assert.ok(/final\.html|\.\.\/final-step\.html/.test(fallback));
-  assert.match(fallback, /фінальна анкета на 45 запитань/);
+  assert.match(fallback, /фінальна анкета на 33 запитання/);
   assert.match(finalFallback, /Download ZIP/); assert.ok(/genkovich\.github\.io\/ai-work-check\/final\.html|\.\.\/final-step\.html/.test(finalFallback));
   assert.match(finalFallback, /## Як відповідати/); assert.match(finalFallback, /## Як порахувати/); assert.match(finalFallback, /## Як читати результат/);
   assert.match(finalFallback, /Сильні й слабкі теми/); assert.match(finalFallback, /## Що з цього дає основна програма\n\n\| Тема \| Роль \| Що дає програма \|/);
   assert.match(finalFallback, /\| № \| Запитання \| Тема \| Роль \| Рівень 0-4 або «не було» \|/);
-  assert.match(finalFallback, /12 балів на тему, 96 у ролі інженера, 84 у ролі того, хто веде команду, і 180 разом/);
+  assert.match(finalFallback, /12 балів на тему і 132 разом/); assert.match(finalFallback, /docs\/practice\/06-audit\.md/);
   assert.match(finalFallback, /## Якщо хочеш продовжити навчання/);
   assert.match(finalFallback, /agenticengineering\.it\.com/); assert.doesNotMatch(finalFallback, /Молоко|Куплено|\bM\d{1,2}\b|Де це в основній програмі|Найслабші модулі|таблиц[яі] модулів|\| Модуль \||основн(а|ої) програми біля|START10|FINAL35|зі стартов|Стик \| Ланки|урок \d/i);
-  assert.doesNotMatch(finalFallback, TOOLS);
+  assert.doesNotMatch(finalFallback, TOOLS_DOC);
+  assert.doesNotMatch(finalFallback.replace(/Інтеграції через MCP/g, ''), /MCP/);
   for (const md of [fallback, finalFallback]) { assert.doesNotMatch(md, /імпортуй|[Іі]мпорту? |A\/B\/C\/D|Так, зазвичай|[—–…]/); assert.doesNotMatch(md, ANTITHESIS); assert.doesNotMatch(md, COMPARISON); }
 });
 
-test('FINAL45 v3: fifteen topics in two roles with an artefact rule; the start set stays byte-stable', () => {
+test('FINAL33 v4: eleven topics of one role, one per main-programme theme, with an artefact rule; the start set stays byte-stable', () => {
   assert.equal(createHash('sha256').update(JSON.stringify(M.SETS.start)).digest('hex'), '8a942e401ababd09f7b566bfce84c682a29f06a0ee170920c73f84bdcf349058', 'START10 remains byte-stable as data');
   const q = number => F.QUESTIONS[number - 1].text + ' ' + F.QUESTIONS[number - 1].hint + ' ' + F.QUESTIONS[number - 1].next;
-  assert.match(q(4), /автоматична перевірка до злиття/);
-  assert.match(q(18), /ліміт спроб/);
-  assert.match(q(37), /дозволи агента це підтверджують/);
-  assert.match(q(45), /окремо від показників/);
+  assert.match(q(4), /корені репозиторію під git/);
+  assert.match(q(18), /парою вперед і назад/);
+  assert.match(q(27), /merge лише через твоє підтвердження/);
+  assert.match(q(33), /окремо від використання/);
+  for (const X of [F]) for (const g of X.GROUPS) assert.doesNotMatch(g.name, /\bM\d{1,2}\b|модул|лекці/i, 'module tag in topic name '+g.name);
   for (const page of [html, finalHtml]) {
-    assert.doesNotMatch(page, /START10|FINAL35|не порівню/);
-    assert.match(page, /Пропустити блок/);
-    assert.match(page, /Блок команди можна пропустити однією кнопкою/);
-    assert.match(page, /id="skip-lead"|skip\.id='skip-lead'/);
+    assert.doesNotMatch(page, /START10|FINAL35|не порівню|Пропустити блок|skip-lead|Tech Lead|дв(і|ох) рол/);
+    assert.match(page, /Командний шар стоїть в останній темі/);
   }
   for (const text of [finalFallback, F.markdown(exported(F, 3))]) {
-    assert.match(text, /mini-audit-final-v3/);
-    assert.doesNotMatch(text, /mini-audit-final-v2|START10|FINAL35/);
+    assert.match(text, /mini-audit-final-v4/);
+    assert.doesNotMatch(text, /mini-audit-final-v[23]|START10|FINAL35|Пропустити блок|Tech Lead/);
   }
-  assert.throws(() => F.markdown({...exported(F, 3), version:'mini-audit-final-v2'}));
+  assert.throws(() => F.markdown({...exported(F, 3), version:'mini-audit-final-v3'}));
 });
