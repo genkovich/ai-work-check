@@ -86,10 +86,10 @@ test('final.html is index.html in final mode: same engine and UI byte for byte, 
   assert.equal(part(finalHtml, 'audit-engine'), part(html, 'audit-engine'));
   assert.equal(part(finalHtml, 'audit-ui'), part(html, 'audit-ui'));
   assert.match(html, /<html lang="uk" data-mode="start">/); assert.match(finalHtml, /<html lang="uk" data-mode="final">/);
-  assert.match(finalHtml, /<title>Як я працюю з AI після мінікурсу: 33 запитання<\/title>/);
-  assert.match(finalHtml, /Мінікурс · урок 6 · фінальна анкета/);
-  assert.match(finalHtml, /href="https:\/\/agenticengineering\.it\.com\/"[^>]*>Подати заявку на консультацію</);
-  assert.match(finalHtml, /для завершення мінікурсу заявку подавати не потрібно/i);
+  assert.match(finalHtml, /<title>Як я працюю з AI після Інтенсиву: 33 запитання<\/title>/);
+  assert.match(finalHtml, /Інтенсив · урок 6 · фінальна анкета/);
+  assert.match(finalHtml, /href="https:\/\/agenticengineering\.it\.com\/agenticintensive01\/anketa\?utm_source=kit"[^>]*>Подати заявку на консультацію</);
+  assert.match(finalHtml, /для завершення Інтенсиву заявку подавати не потрібно/i);
   assert.doesNotMatch(html, /agenticengineering\.it\.com|Залишити анкету|Основна програма/);
   assert.match(html, /<!-- cta -->/); assert.doesNotMatch(finalHtml, /<!-- cta -->/);
   assert.match(finalHtml, /final-questionnaire\.md/); assert.doesNotMatch(html, /final-questionnaire\.md/);
@@ -299,7 +299,7 @@ test('start Markdown carries the chain, every group with links and lesson, the w
 test('final Markdown names the weakest topics with why and program, then the seam summary, the first attempt and the eleven topics', () => {
   const a = answers(F, 4); for (let i = 19; i <= 21; i++) a['q'+i] = 1; a.q17 = 'none'; a.q5 = 2;
   const md = F.markdown(F.makeExport(a, DATE));
-  assert.match(md, /^# Як я працюю з AI після мінікурсу: 33 запитання\n/);
+  assert.match(md, /^# Як я працюю з AI після Інтенсиву: 33 запитання\n/);
   assert.match(md, /Версія: mini-audit-final-v4/); assert.match(md, /Роль: Інженер \(11 тем, по одній на тему основної програми\)/);
   assert.match(md, /Бали: 117 \/ 128/); assert.match(md, /Поза підрахунком: 1 із 33/);
   assert.match(md, new RegExp('## Найслабші теми\\n\\n### Інженер\\n\\n\\*\\*Виконання й масштаб\\*\\*: 3 з 12\\.\\n\\n[^\\n]+\\n\\n[^\\n]+\\n\\n## Сильні й слабкі теми\\n\\nСильні: Ціна й межі моделі \\(12 з 12\\), Агент і його інструменти \\(10 з 12\\), [^\\n]+ Слабкі: Виконання й масштаб \\(3 з 12\\)\\.\\n\\n## Перша спроба\\n\\n'));
@@ -311,7 +311,7 @@ test('final Markdown names the weakest topics with why and program, then the sea
   assert.match(md, /## Відповіді\n\n\| № \| Запитання \| Відповідь \| Бали \|\n\|---\|---\|---\|---\|\n/);
   assert.ok(md.includes('| 19 | '+F.QUESTIONS[18].text+' | 1 · Рідко | 1 |'));
   assert.ok(md.includes('| 17 | '+F.QUESTIONS[16].text+' | Ще не було такої ситуації | Без бала |'));
-  assert.match(md, /## Як використати відповіді\n\nЦе самооцінка практик в одинадцяти темах\./); assert.match(md, /docs\/practice\/06-audit\.md/);
+  assert.match(md, /## Як використати відповіді\n\nЦе самооцінка практик в одинадцяти темах\./); assert.match(md, /у публічний репо (його )?не клади/);
   assert.doesNotMatch(md, /\bM\d{1,2}\b|модул|лекці|Де це в основній програмі|\| Модуль \||START10|FINAL35|зі стартов|Ланцюг курсу|Найслабший стик|Пʼять стиків|Перша звичка/i);
   assert.doesNotMatch(md, /NaN|undefined|null|0\s*\/\s*0/);
   const skip = answers(F, 3); for (let i = 25; i <= 33; i++) skip['q'+i] = 'none';
@@ -358,7 +358,7 @@ test('offline UI on both pages: no remote resources, storage, HTML sinks or file
 });
 
 test('page copy: chain intro, shopping-list example before questions on start, topic panel and CTA on final, no module map or import anywhere', () => {
-  assert.match(html, /Мінікурс · урок 1 · стартова анкета/);
+  assert.match(html, /Інтенсив · урок 1 · стартова анкета/);
   assert.ok(html.indexOf('списком покупок') < html.indexOf('id="questions"'));
   assert.match(html, /Створювати застосунок зараз не потрібно/);
   assert.match(html, /Найслабший стик/); assert.match(html, /Перша звичка по ланцюгу/);
@@ -372,7 +372,7 @@ test('page copy: chain intro, shopping-list example before questions on start, t
   assert.match(html, /<span class="start-only">Перша звичка по ланцюгу<\/span><span class="final-only">Перша спроба<\/span>/);
   for (const page of [html, finalHtml]) assert.doesNotMatch(page, /[Іі]мпорт|попередній результат|A\/B\/C\/D|Так, зазвичай|Де це в основній програмі|Найслабші модулі|тег модуля|\bM1\b|M11|START10|FINAL35/);
   assert.match(finalHtml, /артефакт з останньої задачі/);
-  assert.match(finalHtml, /Командний шар стоїть в останній темі/); assert.match(finalHtml, /docs\/practice\/06-audit\.md/);
+  assert.match(finalHtml, /Командний шар стоїть в останній темі/); assert.match(finalHtml, /у публічний репо (його )?не клади/);
   assert.match(finalHtml, /<div class="panel cta final-only" id="cta"><p class="panel-cap">Що далі<\/p>/);
   assert.match(fallback, /Download ZIP/); assert.ok(/genkovich\.github\.io\/ai-work-check|\.\.\/first-step\.html/.test(fallback));
   assert.match(fallback, /## Як читати результат/); assert.match(fallback, /низький результат на старті очікуваний/);
@@ -382,7 +382,7 @@ test('page copy: chain intro, shopping-list example before questions on start, t
   assert.match(finalFallback, /## Як відповідати/); assert.match(finalFallback, /## Як порахувати/); assert.match(finalFallback, /## Як читати результат/);
   assert.match(finalFallback, /Сильні й слабкі теми/); assert.match(finalFallback, /## Що з цього дає основна програма\n\n\| Тема \| Роль \| Що дає програма \|/);
   assert.match(finalFallback, /\| № \| Запитання \| Тема \| Роль \| Рівень 0-4 або «не було» \|/);
-  assert.match(finalFallback, /12 балів на тему і 132 разом/); assert.match(finalFallback, /docs\/practice\/06-audit\.md/);
+  assert.match(finalFallback, /12 балів на тему і 132 разом/); assert.match(finalFallback, /у публічний репо (його )?не клади/);
   assert.match(finalFallback, /## Якщо хочеш продовжити навчання/);
   assert.match(finalFallback, /agenticengineering\.it\.com/); assert.doesNotMatch(finalFallback, /Молоко|Куплено|\bM\d{1,2}\b|Де це в основній програмі|Найслабші модулі|таблиц[яі] модулів|\| Модуль \||основн(а|ої) програми біля|START10|FINAL35|зі стартов|Стик \| Ланки|урок \d/i);
   assert.doesNotMatch(finalFallback, TOOLS_DOC);

@@ -144,8 +144,8 @@ test('all copy controls and evidence fields have real unique DOM targets',()=>{
   assert.equal(ids.length,new Set(ids).size);
   for(const [,target]of html.matchAll(/data-copy="([^"]+)"/g))assert.ok(html.includes('<pre id="'+target+'">'));
   for(const id of ['completion','evidence','evidence-agent','evidence-checks','evidence-fresh','evidence-limits','remember','progress','progress-text','storage-status','copy-status','download','reset'])assert.ok(ids.includes(id),id);
-  const exported=C.markdown(all(false),'2026-09-06T12:00:00.000Z',{agent:'Codex',checks:'tests 2',fresh:'Явно прочитано views/AGENTS.md',limits:'Автозавантаження не перевірено'});
-  for(const text of ['Codex','tests 2','Явно прочитано views/AGENTS.md','Автозавантаження не перевірено'])assert.ok(exported.includes(text));
+  const exported=C.markdown(all(false),'2026-09-06T12:00:00.000Z',{agent:'Codex',checks:'tests 3',fresh:'Явно прочитано views/AGENTS.md',limits:'Автозавантаження не перевірено'});
+  for(const text of ['Codex','tests 3','Явно прочитано views/AGENTS.md','Автозавантаження не перевірено'])assert.ok(exported.includes(text));
   assert.throws(()=>C.markdown(all(false),undefined,{agent:'x'.repeat(3001)}));
   assert.throws(()=>C.markdown(all(false),undefined,{other:'x'}));
   assert.throws(()=>C.markdown(all(false),undefined,{fresh:42}));

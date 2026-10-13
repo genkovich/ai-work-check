@@ -14,7 +14,7 @@ textarea{display:block;width:100%;min-height:110px;resize:vertical;font:15px/1.6
 <body>
 <main>
 <header>
-<div class="eyebrow">Мінікурс · урок 2</div>
+<div class="eyebrow">Інтенсив · урок 2</div>
 <h1>Context Engineering: перевіряємо контекст проєкту</h1>
 <p class="intro">Агенту потрібні точні інструкції й зрозумілий опис проєкту. На готовому застосунку перевіримо основні та вкладені правила, створимо карту через survey і подивимося, чи нова сесія правильно розбереться в роботі.</p>
 <p>Основні файли вже підготовлені. Єдиний обовʼязковий новий документ у проєкті: <code>docs/architecture-map.md</code>. Власні результати запишеш у поля цієї сторінки й експортуєш одним файлом. Реалізацію ще не починаємо.</p>
@@ -31,7 +31,7 @@ textarea{display:block;width:100%;min-height:110px;resize:vertical;font:15px/1.6
 <article class="step" id="step-1" data-step="1">
 <h2>1. Завантаж і відкрий проєкт</h2>
 <p><span class="label">Що робити.</span></p>
-<p>Увійди у GitHub і відкрий <a href="https://github.com/genkovich/agentic-engineering-mini-kit">пакет курсу</a>. Для 404 перевір акаунт і прийняте запрошення; звернися до команди курсу, якщо доступу немає. Публічний чекліст не надає доступу до коду.</p>
+<p>Відкрий <a href="https://github.com/genkovich/agentic-engineering-mini-kit">пакет курсу</a>. Репозиторій публічний, акаунт GitHub для завантаження не обовʼязковий.</p>
 <p>Потрібні <a href="https://git-scm.com/downloads">Git</a>, <a href="https://nodejs.org/en/download">Node.js 22 або 24</a> і редактор, наприклад <a href="https://code.visualstudio.com/download">VS Code</a>. Відкрий термінал у своїй теці навчальних проєктів поза іншими Git-репозиторіями. Скопіюй кіт:</p>
 <pre id="block-1"><code>git clone https://github.com/genkovich/agentic-engineering-mini-kit.git
 cd agentic-engineering-mini-kit</code></pre><button class="copy" data-copy="block-1" type="button">Копіювати</button>
@@ -51,9 +51,9 @@ git --version</code></pre><button class="copy" data-copy="block-2" type="button"
 <pre id="block-3"><code>npm ci</code></pre><button class="copy" data-copy="block-3" type="button">Копіювати</button>
 <p>Дочекайся завершення: термінал знову запропонує ввід. При <code>ENOENT</code> зі згадкою <code>package.json</code> перевір теку. Інші помилки спочатку прочитай і виправ; відео можна поставити на паузу.</p>
 <pre id="block-4"><code>npm run verify</code></pre><button class="copy" data-copy="block-4" type="button">Копіювати</button>
-<p>Це два тести скелета: health-відповідь і HTML-оболонка. Приклад очікування, не результат твого запуску:</p>
-<pre id="block-5"><code>tests 2
-pass 2
+<p>Це три тести скелета: health-відповідь, HTML-оболонка з CSP і перемикач теми. Приклад очікування, не результат твого запуску:</p>
+<pre id="block-5"><code>tests 3
+pass 3
 fail 0</code></pre><button class="copy" data-copy="block-5" type="button">Копіювати</button>
 <p>Збережи фактичний підсумок у звичайних нотатках або історії термінала. Окремий документ за шаблоном для цього не потрібен.</p>
 <p>У терміналі запусти:</p>
@@ -221,7 +221,7 @@ git status --short</code></pre><button class="copy" data-copy="block-26" type="b
 <p>Очікуємо карту й службові файли обраного встановлення SDD. Код, тести й залежності залишаються початковими. Уточнення готових інструкцій допустимі лише після твоєї перевірки та погодження; обовʼязкових правок заради вправи немає.</p>
 <p>Заповни поля під кроками: інструмент, фактичні запуски, перевірка нової сесії та неперевірене. Натисни <strong>Зберегти результат текстом</strong> до закриття сторінки. Поля не зберігаються автоматично, навіть якщо ввімкнено збереження позначок. Не вставляй секрети й приватні розмови.</p>
 <p>У проєкті потрібна лише карта від survey. Roadmap у кіті вже готовий, ми його читаємо; окремі interview, бриф і handoff для другого уроку не створюємо.</p>
-<p><span class="label">Що має бути видно.</span> Два тести проходять, зміни зрозумілі, карта перевірена, власний результат нової сесії записано й експортовано.</p>
+<p><span class="label">Що має бути видно.</span> Три тести проходять, зміни зрозумілі, карта перевірена, власний результат нової сесії записано й експортовано.</p>
 <label class="check"><input type="checkbox" data-check="10">Познач після перевірки та збереження результату.</label>
 </article>
 <section id="evidence" class="step" aria-labelledby="evidence-title">
